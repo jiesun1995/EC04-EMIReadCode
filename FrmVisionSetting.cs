@@ -14,8 +14,6 @@ namespace EC04_EMIReadCode
 {
     public partial class FrmVisionSetting : Form
     {
-        private CameraConfig _leftCameraConfig;
-        private CameraConfig _rightCameraConfig;
         private readonly FrmVisionUpdate _leftFrmVisionUpdate;
         private readonly FrmVisionUpdate _rightFrmVisionUpdate;
         public FrmVisionSetting(Action<CogToolBlock> leftcallback, Action<CogToolBlock> rightcallback)
