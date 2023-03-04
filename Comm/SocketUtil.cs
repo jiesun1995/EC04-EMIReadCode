@@ -11,8 +11,8 @@ namespace EC04_EMIReadCode.Comm
 {
     public class SocketServer
     {
-        private string _ip = string.Empty;
-        private int _port = 0;
+        private readonly string _ip = string.Empty;
+        private readonly int _port = 0;
         private Socket _socket = null;
         private byte[] buffer = new byte[1024 * 1024 * 2];
         /// <summary>

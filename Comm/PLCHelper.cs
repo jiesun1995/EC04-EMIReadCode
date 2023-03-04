@@ -44,6 +44,7 @@ namespace EC04_EMIReadCode.Comm
         }
         public void Write(string address, ushort val)
         {
+            LogManager.PLCLogs.Debug($"往地址[{address}:{val}]写入");
             var result = plcNet.Write(address, val);
             _isConnect = result.IsSuccess;
             if (!result.IsSuccess)

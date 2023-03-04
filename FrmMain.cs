@@ -132,7 +132,7 @@ namespace EC04_EMIReadCode
             }
             catch (Exception ex)
             {
-                LogManager.Error(ex);
+                LogManager.Logs.Error(ex);
             }
 
             tabPage1.Controls.Add(tableLayoutPanel);

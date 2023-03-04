@@ -20,7 +20,7 @@ namespace EC04_EMIReadCode.Comm
             }
             catch (Exception ex)
             {
-                LogManager.Fatal(ex);
+                LogManager.Logs.Fatal(ex);
             }
             if (running)
             {

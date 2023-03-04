@@ -20,9 +20,11 @@ namespace EC04_EMIReadCode
             LogManager.Init(null);
             SystemHelper.OnlyRun("EC04_EMIReadCode", () =>
             {
-                LogManager.Debug("开始加载配置");
+                LogManager.Logs.Debug("开始加载配置");
                 DataContent.LoadConfig();
-                LogManager.Debug("加载配置完成");
+                LogManager.Logs.Debug("加载配置完成");
+                LogManager.PLCLogs.Debug("PLC日志初始化成功");
+                LogManager.MesLogs.Debug("MES日志初始化成功");
             });
             Application.Run(new FrmMain());
         }
