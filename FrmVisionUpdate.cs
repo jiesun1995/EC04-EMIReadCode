@@ -79,5 +79,23 @@ namespace EC04_EMIReadCode
                 MessageBox.Show("VPP程序保存失败" + ex.Message);
             }
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ICogImage cogImage = null;
+            try
+            {
+                var camera = CameraHelper.Instance.Open(tbxName.Text);
+                CameraHelper.Instance.SetExposureTime(camera, nunExposureTime.Value.ToString());
+                CameraHelper.Instance.SetGain(camera, nunGain.Value.ToString());
+                CameraHelper.Instance.GrabImageToCogImg(camera, out cogImage);
+                cogToolBlockEditV21.Subject.Inputs["IN_Image"].Value = cogImage;
+                cogToolBlockEditV21.Subject.Run();
+            }
+            catch (Exception ex)
+            {
+                LogManager.Logs.Error(ex);
+            }
+        }
     }
 }

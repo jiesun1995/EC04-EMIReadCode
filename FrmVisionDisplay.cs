@@ -20,52 +20,131 @@ namespace EC04_EMIReadCode
         private VisionHelper _visionHelper;
         private readonly Stopwatch _stopwatch;
         private string _cameraName;
+        private ICogImage _cogImage;
         public FrmVisionDisplay(string vppPath,string cameraName)
         {
             _stopwatch=new Stopwatch();
             _cameraName = cameraName;
             InitializeComponent();
-            LoadVision(vppPath, cameraName);
+            LoadVision(vppPath, cameraName).Wait();
 
             lblState.BackColor = _camera != null ? Color.GreenYellow : Color.Red;
         }
-        public void LoadVision(string vppPath,string cameraName) 
+        public Task LoadVision(string vppPath,string cameraName) 
         {
+            var task = new TaskFactory().StartNew(() =>
+            {
+                try
+                {
+                    _visionHelper = new VisionHelper(vppPath);
+                    _camera = CameraHelper.Instance.Open(cameraName);
+                }
+                catch (Exception ex)
+                {
+                    LogManager.Logs.Error(ex);
+                }
+            });
+            return task;
+        }
+        private ICogImage RunCamera(string exposureTime="", string gain = "")
+        {
+            ICogImage cogImage=null;
             try
             {
-                _visionHelper = new VisionHelper(vppPath);
-                _camera = CameraHelper.Instance.Open(cameraName);
+                if (!string.IsNullOrWhiteSpace(exposureTime))
+                    CameraHelper.Instance.SetExposureTime(_camera, exposureTime);
+                if (!string.IsNullOrWhiteSpace(gain))
+                    CameraHelper.Instance.SetGain(_camera, gain);
+                CameraHelper.Instance.GrabImageToCogImg(_camera, out cogImage);
+                SystemHelper.UIShow(btnCamera, () =>
+                {
+                    btnCamera.BackColor = Color.Green;
+                });
             }
             catch (Exception ex)
             {
-                LogManager.Error(ex);
+                LogManager.Logs.Error(ex);
+                SystemHelper.UIShow(btnCamera, () =>
+                {
+                    btnCamera.BackColor = Color.Red;
+                });
+            }
+            return cogImage;
+        }
+        private Tuple<Tuple<bool, string>, Tuple<bool, string>> RunReadCode(ICogImage cogImage)
+        {
+            try
+            {
+                _visionHelper.SetInput("IN_Image", cogImage);
+                _visionHelper.Run();
+                
+                var leftResult = bool.Parse(_visionHelper.GetOutput("LeftResult"));
+                var rightResult = bool.Parse(_visionHelper.GetOutput("RightResult"));
+                var leftCode = leftResult? _visionHelper.GetOutput("LeftCode"):"NG";
+                var rightCode = rightResult? _visionHelper.GetOutput("RightCode"):"NG";
+
+                SystemHelper.UIShow(btnReadCode, () =>
+                {
+                    btnReadCode.BackColor = Color.Green;
+                    _visionHelper.DisPaly(cogRecordDisplay1);
+                });
+                return new Tuple<Tuple<bool, string>, Tuple<bool, string>>
+                    (new Tuple<bool, string>(leftResult, leftCode), new Tuple<bool, string>(rightResult, rightCode));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Logs.Error(ex);
+                SystemHelper.UIShow(btnReadCode, () =>
+                 {
+                     btnReadCode.BackColor = Color.Red;
+                 });
+                return null;
             }
         }
-
-        public Tuple<string,string> Run(string ExposureTime,string Gain)
+        private void ShowUI(Tuple<Tuple<bool, string>, Tuple<bool, string>> data)
         {
-            ICogImage cogImage ;
-            CameraHelper.Instance.SetExposureTime(_camera, ExposureTime);
-            CameraHelper.Instance.SetGain(_camera, Gain);
-            CameraHelper.Instance.GrabImageToCogImg(_camera,out cogImage);
-            _visionHelper.SetInput("IN_Image", cogImage);
-            _stopwatch.Restart();
-            _visionHelper.Run();
-            _stopwatch.Stop();
-            _visionHelper.DisPaly(cogRecordDisplay1);
-            var result = bool.Parse(_visionHelper.GetOutput("Result"));
-            var leftCode = _visionHelper.GetOutput("LeftCode");
-            var rightCode = _visionHelper.GetOutput("RightCode");
-            lblResult.Text = $"结果：\r\n左：{leftCode}\r\n右：{rightCode}";
-            lblResultColor.BackColor=result? Color.Gray : Color.Red;
-            lblTime.Text = $"耗时：\r\n{_stopwatch.Elapsed.TotalMilliseconds}ms";
-            return new Tuple<string, string>(leftCode, rightCode);
+            var leftResult = data.Item1.Item1;
+            var rightResult = data.Item2.Item1;
+            var leftCode = data.Item1.Item2;
+            var rightCode = data.Item2.Item2;
+            LogManager.Logs.Info($"读取到产品sn[{leftCode}:{rightCode}]");
+            SystemHelper.UIShow(lblResult, () =>
+             {
+                 lblResult.Text = $"结果：\r\n左：{leftCode}\r\n右：{rightCode}";
+                 lblResultColor.BackColor = leftResult && rightResult ? Color.Green : Color.Red;
+                 lblTime.Text = $"耗时：\r\n{_stopwatch.Elapsed.TotalMilliseconds}ms";
+             });
         }
-
+        public Tuple<string,string> Run(string exposureTime,string gain)
+        {
+            _stopwatch.Restart();
+            ICogImage cogImage;
+            cogImage = RunCamera(exposureTime, gain);
+            var data = RunReadCode(cogImage);
+            _stopwatch.Stop();
+            ShowUI(data);
+            return new Tuple<string, string>(data.Item1.Item2, data.Item2.Item2);
+        }
+        
         private void FrmVisionDisplay_FormClosing(object sender, FormClosingEventArgs e)
         {
             CameraHelper.Instance.Close(_cameraName, _camera);
         }
 
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            Run(string.Empty, string.Empty);
+        }
+
+        private void btnCamera_Click(object sender, EventArgs e)
+        {
+           _cogImage = RunCamera();
+        }
+
+        private void btnReadCode_Click(object sender, EventArgs e)
+        {
+            var data = RunReadCode(_cogImage);
+            ShowUI(data);
+        }
     }
 }

@@ -20,12 +20,25 @@ namespace EC04_EMIReadCode.Comm
             }
             catch (Exception ex)
             {
-                LogManager.Fatal(ex);
+                LogManager.Logs.Fatal(ex);
             }
             if (running)
             {
                 MessageBox.Show("已经运行了一个实例（或旧实例尚未完全关闭），为避免发生异常请不要重复运行程序!", "提示", MessageBoxButtons.OK);
                 System.Environment.Exit(0);
+            }
+        }
+
+
+        public static void UIShow(Control control,Action act)
+        {
+            if (control.IsHandleCreated)
+            {
+                control.Invoke(act);
+            }
+            else
+            {
+                act();
             }
         }
     }

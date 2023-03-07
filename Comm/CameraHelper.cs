@@ -98,7 +98,7 @@ namespace EC04_EMIReadCode.Comm
             }
             catch (Exception ex)
             {
-                LogManager.Error(ex);
+                LogManager.Logs.Error(ex);
                 return false;
             }
         }
@@ -237,7 +237,7 @@ namespace EC04_EMIReadCode.Comm
             }
             catch (Exception ex)
             {
-                LogManager.Error(ex);
+                LogManager.Logs.Error(ex);
                 return false;
             }
         }
@@ -256,7 +256,7 @@ namespace EC04_EMIReadCode.Comm
             }
             catch (Exception ex)
             {
-                LogManager.Error(ex);
+                LogManager.Logs.Error(ex);
                 return false;
             }
         }

@@ -31,9 +31,9 @@
             this.components = new System.ComponentModel.Container();
             this.lblSn = new System.Windows.Forms.Label();
             this.gbxTitle = new System.Windows.Forms.GroupBox();
+            this.lblState = new System.Windows.Forms.Label();
             this.lblResult = new System.Windows.Forms.Label();
             this.lblTime = new System.Windows.Forms.Label();
-            this.lblState = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.gbxTitle.SuspendLayout();
             this.SuspendLayout();
@@ -42,9 +42,10 @@
             // 
             this.lblSn.AutoSize = true;
             this.lblSn.Font = new System.Drawing.Font("宋体", 13F);
-            this.lblSn.Location = new System.Drawing.Point(12, 26);
+            this.lblSn.Location = new System.Drawing.Point(9, 21);
+            this.lblSn.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblSn.Name = "lblSn";
-            this.lblSn.Size = new System.Drawing.Size(87, 22);
+            this.lblSn.Size = new System.Drawing.Size(71, 18);
             this.lblSn.TabIndex = 0;
             this.lblSn.Text = "产品SN:";
             // 
@@ -57,38 +58,43 @@
             this.gbxTitle.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbxTitle.Font = new System.Drawing.Font("宋体", 12F);
             this.gbxTitle.Location = new System.Drawing.Point(0, 0);
+            this.gbxTitle.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.gbxTitle.Name = "gbxTitle";
-            this.gbxTitle.Size = new System.Drawing.Size(341, 202);
+            this.gbxTitle.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.gbxTitle.Size = new System.Drawing.Size(256, 162);
             this.gbxTitle.TabIndex = 1;
             this.gbxTitle.TabStop = false;
             this.gbxTitle.Text = "镭雕";
             // 
+            // lblState
+            // 
+            this.lblState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblState.BackColor = System.Drawing.Color.GreenYellow;
+            this.lblState.Location = new System.Drawing.Point(230, 0);
+            this.lblState.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblState.Name = "lblState";
+            this.lblState.Size = new System.Drawing.Size(26, 22);
+            this.lblState.TabIndex = 4;
+            // 
             // lblResult
             // 
             this.lblResult.AutoSize = true;
-            this.lblResult.Location = new System.Drawing.Point(13, 169);
+            this.lblResult.Location = new System.Drawing.Point(10, 135);
+            this.lblResult.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblResult.Name = "lblResult";
-            this.lblResult.Size = new System.Drawing.Size(99, 20);
+            this.lblResult.Size = new System.Drawing.Size(80, 16);
             this.lblResult.TabIndex = 2;
             this.lblResult.Text = "镭雕结果:";
             // 
             // lblTime
             // 
             this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(13, 99);
+            this.lblTime.Location = new System.Drawing.Point(10, 79);
+            this.lblTime.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTime.Name = "lblTime";
-            this.lblTime.Size = new System.Drawing.Size(99, 20);
+            this.lblTime.Size = new System.Drawing.Size(80, 16);
             this.lblTime.TabIndex = 1;
             this.lblTime.Text = "镭雕耗时:";
-            // 
-            // lblState
-            // 
-            this.lblState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblState.BackColor = System.Drawing.Color.GreenYellow;
-            this.lblState.Location = new System.Drawing.Point(300, 26);
-            this.lblState.Name = "lblState";
-            this.lblState.Size = new System.Drawing.Size(35, 27);
-            this.lblState.TabIndex = 4;
             // 
             // timer1
             // 
@@ -96,10 +102,11 @@
             // 
             // RadiumCarvingForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(341, 202);
+            this.ClientSize = new System.Drawing.Size(256, 162);
             this.Controls.Add(this.gbxTitle);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "RadiumCarvingForm";
             this.Text = "RadiumCarvingForm";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.RadiumCarvingForm_FormClosed);

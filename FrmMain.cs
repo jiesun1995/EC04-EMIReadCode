@@ -15,20 +15,20 @@ namespace EC04_EMIReadCode
     public partial class FrmMain : Form
     {
         private BurnForm _leftBurn;
-        private BurnForm _rightBurn;
-        private RadiumCarvingForm _leftRadiumCarving;
-        private RadiumCarvingForm _rightRadiumCarving;
+        //private BurnForm _rightBurn;
+        private BurnForm _leftRadiumCarving;
+        //private BurnForm _rightRadiumCarving;
         private readonly PLCHelper _plchelper;
         private FrmVisionDisplay _radiumCarvingCamera;
         private FrmVisionDisplay _burnCamera;
         private readonly Stopwatch _stopwatch;
 
-        private const string _leftReadCodeAddress = "D11";
-        private const string _rightReadCodeAddress = "D12";
-        private const string _leftBurnAddress = "D13";
-        private const string _rightBurnAddress = "D14";
-        private const string _leftRadiumCarvingAddress = "D21";
-        private const string _rightRadiumCarvingAddress = "D22";
+        private const int _leftReadCodeAddress = 11;
+        private const int _rightReadCodeAddress = 12;
+        private const int _leftBurnAddress = 13;
+        private const int _rightBurnAddress = 15;
+        private const int _leftRadiumCarvingAddress = 21;
+        private const int _rightRadiumCarvingAddress = 22;
         public FrmMain()
         {
             _stopwatch = new Stopwatch();
@@ -36,13 +36,16 @@ namespace EC04_EMIReadCode
             _plchelper = new PLCHelper(DataContent.SystemConfig.PLCConfig.IP, DataContent.SystemConfig.PLCConfig.Port);
             InitializeComponent();
             timer1.Start();
+            //_plchelper.Write(_leftReadCodeAddress, 1);
+            //_plchelper.Write(_leftRadiumCarvingAddress, 1);
+
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
             tslSystemDate.Text = $"系统时间:{DateTime.Now.ToString()}  |";
             tslRunDate.Text = $"运行时间:{_stopwatch.Elapsed}  |";
             tslPLC.Text = $"PLC状态:{(_plchelper.IsConnect?"已连接":"未连接")}   |";
-            tslPLC.BackColor = _plchelper.IsConnect ? Color.Gray : Color.Red;
+            tslPLC.BackColor = _plchelper.IsConnect ? Color.Green : Color.Red;
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -75,15 +78,6 @@ namespace EC04_EMIReadCode
         }
         private TableLayoutPanel LoadFrm(TableLayoutPanel tableLayout, Form form,int col,int row)
         {
-            //if (row == 0)
-            //{
-            //    tableLayout.RowStyles.Add(new ColumnStyle(SizeType.Percent, 30));
-            //}
-            //else
-            //{
-            //    tableLayout.RowStyles.Add(new ColumnStyle(SizeType.Percent, 70));
-            //}
-            //tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayout.ColumnCount));
             form.TopLevel = false;
             form.Dock = DockStyle.Fill;
             form.FormBorderStyle = FormBorderStyle.None;
@@ -93,7 +87,7 @@ namespace EC04_EMIReadCode
         }
         private bool CodeParse(string code)
         {
-            if (!string.IsNullOrEmpty(code) || code != "NG")
+            if (!string.IsNullOrEmpty(code) && code != "NG")
                 return true;
             else
                 return false;
@@ -104,7 +98,7 @@ namespace EC04_EMIReadCode
             tabPage1.Controls.Clear();
             TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
             tableLayoutPanel.RowCount = 2;
-            tableLayoutPanel.ColumnCount = 4;
+            tableLayoutPanel.ColumnCount = 2;
             tableLayoutPanel.Dock = DockStyle.Fill;
             try
             {
@@ -112,27 +106,27 @@ namespace EC04_EMIReadCode
                 tableLayoutPanel.RowStyles.Add(new ColumnStyle(SizeType.Percent, 65));
                 tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayoutPanel.ColumnCount));
                 tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayoutPanel.ColumnCount));
-                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayoutPanel.ColumnCount));
-                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayoutPanel.ColumnCount));
+                //tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayoutPanel.ColumnCount));
+                //tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayoutPanel.ColumnCount));
                 _leftBurn = new BurnForm(DataContent.SystemConfig.LeftBurn.IP, DataContent.SystemConfig.LeftBurn.Port, "左烧录工站");
                 tableLayoutPanel = LoadFrm(tableLayoutPanel, _leftBurn, 0, 0);
-                _rightBurn = new BurnForm(DataContent.SystemConfig.RightBurn.IP, DataContent.SystemConfig.RightBurn.Port, "右烧录工站");
-                tableLayoutPanel = LoadFrm(tableLayoutPanel, _rightBurn, 1, 0);
-                _leftRadiumCarving = new RadiumCarvingForm(DataContent.SystemConfig.RightRadiumCarving.IP, DataContent.SystemConfig.RightRadiumCarving.Port, "左镭雕工站");
-                tableLayoutPanel = LoadFrm(tableLayoutPanel, _leftRadiumCarving, 2, 0);
-                _rightRadiumCarving = new RadiumCarvingForm(DataContent.SystemConfig.RightRadiumCarving.IP, DataContent.SystemConfig.RightRadiumCarving.Port, "右镭雕工站");
-                tableLayoutPanel = LoadFrm(tableLayoutPanel, _rightRadiumCarving, 3, 0);
+                //_rightBurn = new BurnForm(DataContent.SystemConfig.RightBurn.IP, DataContent.SystemConfig.RightBurn.Port, "右烧录工站");
+                //tableLayoutPanel = LoadFrm(tableLayoutPanel, _rightBurn, 1, 0);
+                _leftRadiumCarving = new BurnForm(DataContent.SystemConfig.RightRadiumCarving.IP, DataContent.SystemConfig.RightRadiumCarving.Port, "左镭雕工站");
+                tableLayoutPanel = LoadFrm(tableLayoutPanel, _leftRadiumCarving, 1, 0);
+                //_rightRadiumCarving = new BurnForm(DataContent.SystemConfig.RightRadiumCarving.IP, DataContent.SystemConfig.RightRadiumCarving.Port, "右镭雕工站");
+                //tableLayoutPanel = LoadFrm(tableLayoutPanel, _rightRadiumCarving, 3, 0);
 
-                _burnCamera = new FrmVisionDisplay(DataContent.SystemConfig.LeftVppPath,DataContent.SystemConfig.LeftCamera.Name);
+                _burnCamera = new FrmVisionDisplay(DataContent.SystemConfig.LeftVppPath, DataContent.SystemConfig.LeftCamera.Name);
                 tableLayoutPanel = LoadFrm(tableLayoutPanel, _burnCamera, 0, 1);
-                tableLayoutPanel.SetColumnSpan(_burnCamera, 2);
+                //tableLayoutPanel.SetColumnSpan(_burnCamera, 2);
                 _radiumCarvingCamera = new FrmVisionDisplay(DataContent.SystemConfig.RightVppPath, DataContent.SystemConfig.RightCamera.Name);
-                tableLayoutPanel = LoadFrm(tableLayoutPanel, _radiumCarvingCamera, 2, 1);
-                tableLayoutPanel.SetColumnSpan(_radiumCarvingCamera, 2);
+                tableLayoutPanel = LoadFrm(tableLayoutPanel, _radiumCarvingCamera, 1, 1);
+                //tableLayoutPanel.SetColumnSpan(_radiumCarvingCamera, 2);
             }
             catch (Exception ex)
             {
-                LogManager.Error(ex);
+                LogManager.Logs.Error(ex);
             }
 
             tabPage1.Controls.Add(tableLayoutPanel);
@@ -141,8 +135,9 @@ namespace EC04_EMIReadCode
             {
                 while (true)
                 {
-                    if (_plchelper.Read(_leftReadCodeAddress) == 1)
+                    if (_plchelper.Read(_leftReadCodeAddress) != 1)
                         continue;
+                    LogManager.Logs.Info("读取到烧录机启动信号");
                     string leftSN = string.Empty;
                     string rightSN = string.Empty;
                     ///todo 扫码
@@ -156,6 +151,7 @@ namespace EC04_EMIReadCode
                         if (!CodeParse(code))
                         {
                             _plchelper.Write(_leftReadCodeAddress, PLCResult.ReadCodeNG);
+                            _plchelper.Write(_leftBurnAddress, PLCResult.ReadCodeNG);
                             return false;
                         }
                         else
@@ -177,6 +173,7 @@ namespace EC04_EMIReadCode
                         if (!CodeParse(code))
                         {
                             _plchelper.Write(_rightReadCodeAddress, PLCResult.ReadCodeNG);
+                            _plchelper.Write(_rightBurnAddress, PLCResult.ReadCodeNG);
                             return false;
                         }
                         else
@@ -203,10 +200,12 @@ namespace EC04_EMIReadCode
                 {
                     if (_plchelper.Read(_leftRadiumCarvingAddress) != 1)
                         continue;
+                    LogManager.Logs.Info("读取到镭雕机启动信号");
+                    
                     string leftSN = string.Empty;
                     string rightSN = string.Empty;
                     ///todo 扫码
-                    var result = _burnCamera.Run(DataContent.SystemConfig.LeftCamera.ExposureTime, DataContent.SystemConfig.LeftCamera.Gain);
+                    var result = _radiumCarvingCamera.Run(DataContent.SystemConfig.LeftCamera.ExposureTime, DataContent.SystemConfig.LeftCamera.Gain);
                     leftSN = result.Item1;
                     rightSN = result.Item2;
                     ///烧录 

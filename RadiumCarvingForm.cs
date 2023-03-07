@@ -27,22 +27,54 @@ namespace EC04_EMIReadCode
 
         public void SendMsg(string SN)
         {
-            lblSn.Text = $"产品SN:{SN}";
             _stopwatch.Restart();
-            _socketClient.Send(SN);
-            var result = _socketClient.Receive();
-            if(string.IsNullOrEmpty(result)) 
+            var data = "NG";
+            try
             {
-                lblResult.Text = $"镭雕结果:{result}";
-                lblResult.BackColor = Color.Gray;
+                _socketClient.Send(SN);
+                data = _socketClient.Receive();
+            }
+            catch (Exception ex)
+            {
+                LogManager.Logs.Error(ex);
+            }
+            _stopwatch.Stop();
+            var result = data == "OK";
+            if (lblSn.IsHandleCreated)
+            {
+                Invoke(new Action(() =>
+                {
+                    lblSn.Text = $"产品SN:{SN}";
+                    if (result)
+                    {
+                        lblResult.Text = $"镭雕结果:{result}";
+                        lblResult.BackColor = Color.Gray;
+                    }
+                    else
+                    {
+                        lblResult.Text = $"镭雕结果:{result}";
+                        lblResult.BackColor = Color.Red;
+                    }
+                    lblTime.Text = $"镭雕耗时:{_stopwatch.Elapsed.TotalMilliseconds}ms";
+                }));
             }
             else
             {
-                lblResult.Text = $"镭雕结果:{result}";
-                lblResult.BackColor = Color.Red;
+                lblSn.Text = $"产品SN:{SN}";
+                if (result)
+                {
+                    lblResult.Text = $"镭雕结果:{result}";
+                    lblResult.BackColor = Color.Gray;
+                }
+                else
+                {
+                    lblResult.Text = $"镭雕结果:{result}";
+                    lblResult.BackColor = Color.Red;
+                }
+                lblTime.Text = $"镭雕耗时:{_stopwatch.Elapsed.TotalMilliseconds}ms";
+               
             }
-            _stopwatch.Stop();
-            lblTime.Text =$"镭雕耗时:{_stopwatch.Elapsed.TotalMilliseconds}ms" ;
+               
         }
 
         private void RadiumCarvingForm_FormClosed(object sender, FormClosedEventArgs e)

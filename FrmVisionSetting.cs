@@ -16,20 +16,20 @@ namespace EC04_EMIReadCode
     {
         private readonly FrmVisionUpdate _leftFrmVisionUpdate;
         private readonly FrmVisionUpdate _rightFrmVisionUpdate;
-        public FrmVisionSetting(Action<CogToolBlock> leftcallback, Action<CogToolBlock> rightcallback)
+        public FrmVisionSetting(Func<CogToolBlock,Task> leftcallback, Func<CogToolBlock,Task> rightcallback)
         {
             InitializeComponent();
             _leftFrmVisionUpdate = new FrmVisionUpdate(DataContent.SystemConfig.LeftVppPath, DataContent.SystemConfig.LeftCamera,(vpppath,cameraConfig, toolblock) =>
             {
                 DataContent.SystemConfig.LeftVppPath = vpppath;
                 DataContent.SystemConfig.LeftCamera = cameraConfig;
-                leftcallback(toolblock);
+                leftcallback(toolblock).Wait();
             });
             _rightFrmVisionUpdate = new FrmVisionUpdate(DataContent.SystemConfig.RightVppPath, DataContent.SystemConfig.RightCamera, (vpppath, cameraConfig, toolblock) =>
             {
                 DataContent.SystemConfig.RightVppPath = vpppath;
                 DataContent.SystemConfig.RightCamera = cameraConfig;
-                rightcallback(toolblock);
+                rightcallback(toolblock).Wait();
             });
 
             _leftFrmVisionUpdate.TopLevel = false;

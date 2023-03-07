@@ -1,4 +1,5 @@
 ﻿using ICTCommunication.ModBus;
+using ICTCommunication.Profinet.Omron;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,57 +12,42 @@ namespace EC04_EMIReadCode.Comm
 {
     public class PLCHelper
     {
-        private readonly ModbusTcpNet plcNet = new ModbusTcpNet();
+        private readonly OmronFinsUdp _omronFinsUdp;
         private bool _isConnect = false;
-        public PLCHelper(string ip, int port = 502, byte station = 1)
+        public PLCHelper(string ip, int port)
         {
-            plcNet = new ModbusTcpNet(ip, port, station);
-            //首地址不从零开始
-            plcNet.AddressStartWithZero = false;
-            //字符串颠倒
-            plcNet.IsStringReverse = false;
-            plcNet.DataFormat = ICTCommunication.Core.DataFormat.CDAB;
-            //编码格式 暂定不使用
-            plcNet.ByteTransform.DataFormat = ICTCommunication.Core.DataFormat.CDAB;
-            //长链接模式
-            plcNet.ConnectServer();
+            try
+            {
+                _omronFinsUdp = new OmronFinsUdp(ip, port);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("PLC初始化失败", ex);
+            }
         }
 
-        public bool IsConnect { get { return _isConnect; } }
+        public bool IsConnect { get => _isConnect; }
 
-        public ushort Read(string address)
+        public int Read(int address)
         {
-            var result = plcNet.ReadUInt16(address);
+            var result = _omronFinsUdp.ReadUInt16($"D{address}");
             _isConnect = result.IsSuccess;
-            if (result.IsSuccess)
-            {
-                return result.Content;
-            }
-            else
-            {
-                throw new Exception($"读取地址[{address}]失败;");
-            }
+            return result.Content;
         }
-        public void Write(string address, ushort val)
+
+        public bool Write(int address, int value)
         {
-            var result = plcNet.Write(address, val);
-            _isConnect = result.IsSuccess;
-            if (!result.IsSuccess)
-            {
-                throw new Exception($"写入地址[{address}:{val}]失败;");
-            }
+            LogManager.PLCLogs.Debug($"往plc写入:D{address}:{value}");
+            var result = _omronFinsUdp.Write($"D{address}", (ushort)value);
+            return result.IsSuccess;
         }
-        public void Write(string address, PLCResult val)
+        public void Write(int address, PLCResult val)
         {
-            Write(address,(ushort)val);
+            Write(address, (ushort)val);
         }
         public void Close()
         {
-            if(plcNet!= null)
-            {
-                plcNet.ConnectClose();
-                plcNet.Dispose();
-            }
+           
         }
     }
     public enum PLCResult
