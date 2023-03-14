@@ -14,6 +14,8 @@ namespace EC04_EMIReadCode.Comm
         public static SystemConfig SystemConfig { private set; get; } = new SystemConfig();
 
         public static string User { set; get; }
+        public static bool RadiumCarving { get; set; }
+        public static bool Burn { get; set; }
 
         public static void SetConfig(SystemConfig systemConfig)
         {
@@ -36,6 +38,7 @@ namespace EC04_EMIReadCode.Comm
     {
         public string SystemPassWord { get; set; } = "jajqr168";
         public string PassWord { get; set; } = "888888";
+        public int CodeLength { get; set; } = 14;
         public string LeftVppPath { set; get; }
         public string RightVppPath { set; get; }
         public CameraConfig LeftCamera { get; set; }=new CameraConfig();
@@ -51,13 +54,13 @@ namespace EC04_EMIReadCode.Comm
         /// </summary>
         public StationData RightBurn { get; set; } = new StationData();
         /// <summary>
-        /// 左镭雕工位
+        /// 镭雕工位
         /// </summary>
-        public StationData LeftRadiumCarving { get; set; } = new StationData();
-        /// <summary>
-        /// 右镭雕工位
-        /// </summary>
-        public StationData RightRadiumCarving { get; set; } = new StationData();
+        public StationData RadiumCarving { get; set; } = new StationData();
+        ///// <summary>
+        ///// 右镭雕工位
+        ///// </summary>
+        //public StationData RightRadiumCarving { get; set; } = new StationData();
         [JsonProperty]
         private Queue<string> BurnCodes { set; get; } =new Queue<string>();
         public void AddBurnCode(string key)

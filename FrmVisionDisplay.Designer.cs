@@ -30,7 +30,8 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmVisionDisplay));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.gbxTitle = new System.Windows.Forms.GroupBox();
+            this.lblState = new System.Windows.Forms.Label();
             this.cogRecordDisplay1 = new Cognex.VisionPro.CogRecordDisplay();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -41,29 +42,38 @@
             this.btnTest = new System.Windows.Forms.Button();
             this.btnReadCode = new System.Windows.Forms.Button();
             this.btnCamera = new System.Windows.Forms.Button();
-            this.lblState = new System.Windows.Forms.Label();
-            this.groupBox1.SuspendLayout();
+            this.gbxTitle.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.cogRecordDisplay1)).BeginInit();
             this.panel1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBox1
+            // gbxTitle
             // 
-            this.groupBox1.Controls.Add(this.lblState);
-            this.groupBox1.Controls.Add(this.cogRecordDisplay1);
-            this.groupBox1.Controls.Add(this.panel1);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold);
-            this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(436, 306);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "相机";
+            this.gbxTitle.Controls.Add(this.lblState);
+            this.gbxTitle.Controls.Add(this.cogRecordDisplay1);
+            this.gbxTitle.Controls.Add(this.panel1);
+            this.gbxTitle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gbxTitle.Font = new System.Drawing.Font("宋体", 13F, System.Drawing.FontStyle.Bold);
+            this.gbxTitle.Location = new System.Drawing.Point(0, 0);
+            this.gbxTitle.Margin = new System.Windows.Forms.Padding(2);
+            this.gbxTitle.Name = "gbxTitle";
+            this.gbxTitle.Padding = new System.Windows.Forms.Padding(2);
+            this.gbxTitle.Size = new System.Drawing.Size(436, 306);
+            this.gbxTitle.TabIndex = 1;
+            this.gbxTitle.TabStop = false;
+            this.gbxTitle.Text = "相机";
+            // 
+            // lblState
+            // 
+            this.lblState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblState.BackColor = System.Drawing.Color.GreenYellow;
+            this.lblState.Location = new System.Drawing.Point(410, -3);
+            this.lblState.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblState.Name = "lblState";
+            this.lblState.Size = new System.Drawing.Size(26, 22);
+            this.lblState.TabIndex = 4;
             // 
             // cogRecordDisplay1
             // 
@@ -189,27 +199,17 @@
             this.btnCamera.UseVisualStyleBackColor = true;
             this.btnCamera.Click += new System.EventHandler(this.btnCamera_Click);
             // 
-            // lblState
-            // 
-            this.lblState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblState.BackColor = System.Drawing.Color.GreenYellow;
-            this.lblState.Location = new System.Drawing.Point(410, -3);
-            this.lblState.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblState.Name = "lblState";
-            this.lblState.Size = new System.Drawing.Size(26, 22);
-            this.lblState.TabIndex = 4;
-            // 
             // FrmVisionDisplay
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(436, 306);
-            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.gbxTitle);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FrmVisionDisplay";
             this.Text = "FrmVisionDisplay";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmVisionDisplay_FormClosing);
-            this.groupBox1.ResumeLayout(false);
+            this.gbxTitle.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.cogRecordDisplay1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
@@ -220,7 +220,7 @@
         }
 
         #endregion
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox gbxTitle;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label lblResultColor;
         private System.Windows.Forms.Label lblResult;

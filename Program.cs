@@ -24,7 +24,8 @@ namespace EC04_EMIReadCode
                 DataContent.LoadConfig();
                 LogManager.Logs.Debug("加载配置完成");
                 LogManager.PLCLogs.Debug("PLC日志初始化成功");
-                LogManager.MesLogs.Debug("MES日志初始化成功");
+                LogManager.RadiumCarvingLogs.Debug("镭雕日志初始化成功");
+                LogManager.BurnLogs.Debug("烧录日志初始化成功");
             });
             Application.Run(new FrmMain());
         }

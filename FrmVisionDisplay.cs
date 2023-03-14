@@ -21,14 +21,23 @@ namespace EC04_EMIReadCode
         private readonly Stopwatch _stopwatch;
         private string _cameraName;
         private ICogImage _cogImage;
-        public FrmVisionDisplay(string vppPath,string cameraName)
+        public FrmVisionDisplay(string vppPath,string cameraName,string title="相机")
         {
             _stopwatch=new Stopwatch();
             _cameraName = cameraName;
             InitializeComponent();
             LoadVision(vppPath, cameraName).Wait();
-
+            gbxTitle.Text = title;
             lblState.BackColor = _camera != null ? Color.GreenYellow : Color.Red;
+        }
+        private string BuildEmpty(int length)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < length; i++)
+            {
+                sb.Append(" ");
+            }
+            return sb.ToString();
         }
         public Task LoadVision(string vppPath,string cameraName) 
         {
@@ -56,9 +65,13 @@ namespace EC04_EMIReadCode
                 if (!string.IsNullOrWhiteSpace(gain))
                     CameraHelper.Instance.SetGain(_camera, gain);
                 CameraHelper.Instance.GrabImageToCogImg(_camera, out cogImage);
+                if (cogImage == null)
+                    throw new ArgumentNullException();
+                //cogImage.ToBitmap
                 SystemHelper.UIShow(btnCamera, () =>
                 {
                     btnCamera.BackColor = Color.Green;
+                    lblState.BackColor = Color.Green;
                 });
             }
             catch (Exception ex)
@@ -66,6 +79,7 @@ namespace EC04_EMIReadCode
                 LogManager.Logs.Error(ex);
                 SystemHelper.UIShow(btnCamera, () =>
                 {
+                    btnCamera.BackColor = Color.Red;
                     btnCamera.BackColor = Color.Red;
                 });
             }
@@ -128,7 +142,8 @@ namespace EC04_EMIReadCode
         
         private void FrmVisionDisplay_FormClosing(object sender, FormClosingEventArgs e)
         {
-            CameraHelper.Instance.Close(_cameraName, _camera);
+            if (_camera != null)
+                CameraHelper.Instance.Close(_cameraName, _camera);
         }
 
         private void btnTest_Click(object sender, EventArgs e)

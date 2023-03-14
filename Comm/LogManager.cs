@@ -22,9 +22,13 @@ namespace EC04_EMIReadCode.Comm
         /// </summary>
         public static MyLog PLCLogs { get; private set; }
         /// <summary>
-        /// MES日志对象
+        /// 烧录日志对象
         /// </summary>
-        public static MyLog MesLogs { get; private set; }
+        public static MyLog BurnLogs { get; private set; }
+        /// <summary>
+        /// 镭雕日志对象
+        /// </summary>
+        public static MyLog RadiumCarvingLogs { get; private set; }
         private static ListView _listView;
         private static ConcurrentQueue<Tuple<string, Color>> _queue = new ConcurrentQueue<Tuple<string, Color>>();
         /// <summary>
@@ -35,8 +39,9 @@ namespace EC04_EMIReadCode.Comm
             log4net.Config.XmlConfigurator.Configure();
             var logs = log4net.LogManager.GetLogger("Logs");
             Logs = new MyLog(logs, UIShow);
-            MesLogs = new MyLog( log4net.LogManager.GetLogger("MesLogs"),UIShow, logs);
             PLCLogs = new MyLog(log4net.LogManager.GetLogger("PLCLogs"), UIShow, logs);
+            BurnLogs = new MyLog(log4net.LogManager.GetLogger("BurnLogs"), UIShow, logs);
+            RadiumCarvingLogs = new MyLog(log4net.LogManager.GetLogger("RadiumCarvingLogs"), UIShow, logs);
             if (listView != null)
             {
                 _listView = listView;

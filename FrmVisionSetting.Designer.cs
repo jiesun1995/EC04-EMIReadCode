@@ -40,37 +40,41 @@
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1225, 746);
+            this.tabControl1.Size = new System.Drawing.Size(919, 593);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage1
             // 
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1217, 717);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Size = new System.Drawing.Size(911, 567);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "左扫码配置";
+            this.tabPage1.Text = "烧录扫码设置";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1217, 717);
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage2.Size = new System.Drawing.Size(911, 567);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "右扫码配置";
+            this.tabPage2.Text = "打标扫码设置";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // FrmVisionSetting
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1225, 746);
+            this.ClientSize = new System.Drawing.Size(919, 593);
             this.Controls.Add(this.tabControl1);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "FrmVisionSetting";
             this.Text = "FrmVisionSetting";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmVisionSetting_FormClosing);

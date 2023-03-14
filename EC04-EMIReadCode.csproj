@@ -83,11 +83,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BurnForm.cs">
+    <Compile Include="FrmBurn.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BurnForm.Designer.cs">
-      <DependentUpon>BurnForm.cs</DependentUpon>
+    <Compile Include="FrmBurn.Designer.cs">
+      <DependentUpon>FrmBurn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmRadiumCarving.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmRadiumCarving.Designer.cs">
+      <DependentUpon>FrmRadiumCarving.cs</DependentUpon>
     </Compile>
     <Compile Include="Comm\CameraHelper.cs" />
     <Compile Include="Comm\CHKVision_SDK.cs" />
@@ -148,14 +154,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RadiumCarvingForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RadiumCarvingForm.Designer.cs">
-      <DependentUpon>RadiumCarvingForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="BurnForm.resx">
-      <DependentUpon>BurnForm.cs</DependentUpon>
+    <EmbeddedResource Include="FrmBurn.resx">
+      <DependentUpon>FrmBurn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmRadiumCarving.resx">
+      <DependentUpon>FrmRadiumCarving.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmInternetConfig.resx">
       <DependentUpon>FrmInternetConfig.cs</DependentUpon>
@@ -182,9 +185,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="RadiumCarvingForm.resx">
-      <DependentUpon>RadiumCarvingForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

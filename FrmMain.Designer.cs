@@ -97,9 +97,9 @@
             this.GroupBox1.Controls.Add(this.lvLogs);
             this.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.GroupBox1.Location = new System.Drawing.Point(667, 61);
-            this.GroupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.GroupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.GroupBox1.Name = "GroupBox1";
-            this.GroupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.GroupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.GroupBox1.Size = new System.Drawing.Size(282, 490);
             this.GroupBox1.TabIndex = 3;
             this.GroupBox1.TabStop = false;
@@ -110,7 +110,7 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(2, 61);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(661, 490);
@@ -119,9 +119,9 @@
             // tabPage1
             // 
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage1.Size = new System.Drawing.Size(653, 464);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "烧录/镭雕";
@@ -133,7 +133,7 @@
             this.panel2.Controls.Add(this.statusStrip1);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(2, 555);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(947, 29);
             this.panel2.TabIndex = 1;
@@ -230,7 +230,7 @@
             this.panel1.Controls.Add(this.btnLogo);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(2, 2);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(947, 55);
             this.panel1.TabIndex = 0;
@@ -260,7 +260,7 @@
             this.tableLayoutPanel1.Controls.Add(this.GroupBox1, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(2);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.6652F));
@@ -276,10 +276,10 @@
             this.ClientSize = new System.Drawing.Size(951, 586);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "EMI焊接";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMain_FormClosed);
             this.Load += new System.EventHandler(this.MainForm_Load);

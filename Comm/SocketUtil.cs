@@ -15,6 +15,7 @@ namespace EC04_EMIReadCode.Comm
         private readonly int _port = 0;
         private Socket _socket = null;
         private byte[] buffer = new byte[1024 * 1024 * 2];
+        private List<Socket> clients = new List<Socket>();
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -45,7 +46,8 @@ namespace EC04_EMIReadCode.Comm
                 _socket.Bind(endPoint);
                 //5.0 设置最大连接数
                 _socket.Listen(int.MaxValue);
-                Console.WriteLine("监听{0}消息成功", _socket.LocalEndPoint.ToString());
+                LogManager.Logs.Debug($"监听{_socket.LocalEndPoint.ToString()}消息成功");
+                //Console.WriteLine("监听{0}消息成功", _socket.LocalEndPoint.ToString());
                 //6.0 开始监听
                 Thread thread = new Thread(ListenClientConnect);
                 thread.Start();
@@ -66,7 +68,8 @@ namespace EC04_EMIReadCode.Comm
                 {
                     //Socket创建的新连接
                     Socket clientSocket = _socket.Accept();
-                    clientSocket.Send(Encoding.UTF8.GetBytes("服务端发送消息:"));
+                    //clientSocket.Send(Encoding.UTF8.GetBytes("服务端发送消息:"));
+                    clients.Add(clientSocket);
                     Thread thread = new Thread(ReceiveMessage);
                     thread.Start(clientSocket);
                 }
@@ -76,6 +79,30 @@ namespace EC04_EMIReadCode.Comm
             }
         }
 
+        public int ClientCount { get => clients.Count; }
+        public void SendMessage(string msg)
+        {
+            for (int i = clients.Count-1; i <= 0; i++)
+            {
+                var client = clients[i];
+                if (client.Connected)
+                {
+                    try
+                    {
+                        LogManager.Logs.Debug($"向客户端{client.RemoteEndPoint.ToString()}，发送消息{msg}");
+                        client.Send(Encoding.UTF8.GetBytes(msg));
+                    }
+                    catch (Exception ex)
+                    {
+                        LogManager.Logs.Error(ex);
+                    }
+                }
+                else
+                {
+                    clients.Remove(client);
+                }
+            }
+        }
         /// <summary>
         /// 接收客户端消息
         /// </summary>
@@ -83,13 +110,22 @@ namespace EC04_EMIReadCode.Comm
         private void ReceiveMessage(object socket)
         {
             Socket clientSocket = (Socket)socket;
-            while (true)
+            while (clientSocket.Connected)
             {
+                Thread.Sleep(10);
                 try
                 {
                     //获取从客户端发来的数据
                     int length = clientSocket.Receive(buffer);
-                    Console.WriteLine("接收客户端{0},消息{1}", clientSocket.RemoteEndPoint.ToString(), Encoding.UTF8.GetString(buffer, 0, length));
+                    var data = Encoding.UTF8.GetString(buffer, 0, length);
+                    if (string.IsNullOrEmpty(data)){
+                        clientSocket.Shutdown(SocketShutdown.Both);
+                        clientSocket.Close();
+                        clients.Remove(clientSocket);
+                        break;
+                    }
+                    LogManager.Logs.Debug($"接收客户端{ clientSocket.RemoteEndPoint.ToString()},消息{data}");
+                    //Console.WriteLine("接收客户端{0},消息{1}", clientSocket.RemoteEndPoint.ToString(), Encoding.UTF8.GetString(buffer, 0, length));
                 }
                 catch (Exception ex)
                 {
@@ -98,6 +134,23 @@ namespace EC04_EMIReadCode.Comm
                     clientSocket.Close();
                     break;
                 }
+            }
+        }
+        public void Close()
+        {
+            if (_socket != null)
+            {
+                if (clients.Count > 0)
+                {
+                    foreach (var client in clients)
+                    {
+                        client.Shutdown(SocketShutdown.Both);
+                        //client.Close();
+                    }
+                }
+                //_socket.Disconnect(false);
+                _socket.Close();
+                _socket.Dispose();
             }
         }
     }

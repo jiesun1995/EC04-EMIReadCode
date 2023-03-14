@@ -12,21 +12,23 @@ namespace EC04_EMIReadCode.Comm
         public static void OnlyRun(string name,Action action)
         {
             bool running = true;
-            System.Threading.Mutex mutex = new System.Threading.Mutex(false, name);
+            System.Threading.Mutex mutex = new System.Threading.Mutex(false, name,out running);
             try
             {
-                running = !mutex.WaitOne(0, false);            //这一句有可能会报错，所以要Try起来
+                if(running)
+                //running = !mutex.WaitOne(0, false);            //这一句有可能会报错，所以要Try起来
                 action();
             }
             catch (Exception ex)
             {
                 LogManager.Logs.Fatal(ex);
             }
-            if (running)
+            if (!running)
             {
                 MessageBox.Show("已经运行了一个实例（或旧实例尚未完全关闭），为避免发生异常请不要重复运行程序!", "提示", MessageBoxButtons.OK);
                 System.Environment.Exit(0);
             }
+            //mutex.ReleaseMutex();
         }
 
 

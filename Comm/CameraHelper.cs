@@ -31,7 +31,7 @@ namespace EC04_EMIReadCode.Comm
         public MyCamera Open(string cameraName)
         {
             int nRet;
-            MyCamera myCamera= new MyCamera();
+            MyCamera myCamera= null;
             if (_cameras.ContainsKey(cameraName))
                 return _cameras[cameraName];
             try
@@ -43,6 +43,7 @@ namespace EC04_EMIReadCode.Comm
                     MyCamera.MV_GIGE_DEVICE_INFO gigeInfo = (MyCamera.MV_GIGE_DEVICE_INFO)Marshal.PtrToStructure(buffer, typeof(MyCamera.MV_GIGE_DEVICE_INFO));
                     if (gigeInfo.chUserDefinedName == cameraName)
                     {
+                        myCamera = new MyCamera();
                         nRet = myCamera.MV_CC_CreateDevice_NET(ref device);
                         if (MyCamera.MV_OK != nRet)
                         {

@@ -14,21 +14,21 @@ namespace EC04_EMIReadCode
 {
     public partial class FrmMain : Form
     {
-        private BurnForm _leftBurn;
-        //private BurnForm _rightBurn;
-        private BurnForm _leftRadiumCarving;
-        //private BurnForm _rightRadiumCarving;
+        private BurnForm _frmBurn;
+        private FrmRadiumCarving _frmRadiumCarving;
         private readonly PLCHelper _plchelper;
         private FrmVisionDisplay _radiumCarvingCamera;
         private FrmVisionDisplay _burnCamera;
         private readonly Stopwatch _stopwatch;
 
-        private const int _leftReadCodeAddress = 11;
-        private const int _rightReadCodeAddress = 12;
-        private const int _leftBurnAddress = 13;
-        private const int _rightBurnAddress = 15;
+        private const int _leftBurnAddress = 11;
+        private const int _rightBurnAddress = 12;
+        private const int _leftBurnResultAddress = 13;
+        private const int _rightBurnResultAddress = 15;
         private const int _leftRadiumCarvingAddress = 21;
         private const int _rightRadiumCarvingAddress = 22;
+        private const int _leftRadiumCarvingResultAddress = 23;
+        private const int _rightRadiumCarvingResultAddress = 25;
         public FrmMain()
         {
             _stopwatch = new Stopwatch();
@@ -36,9 +36,6 @@ namespace EC04_EMIReadCode
             _plchelper = new PLCHelper(DataContent.SystemConfig.PLCConfig.IP, DataContent.SystemConfig.PLCConfig.Port);
             InitializeComponent();
             timer1.Start();
-            //_plchelper.Write(_leftReadCodeAddress, 1);
-            //_plchelper.Write(_leftRadiumCarvingAddress, 1);
-
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -87,7 +84,7 @@ namespace EC04_EMIReadCode
         }
         private bool CodeParse(string code)
         {
-            if (!string.IsNullOrEmpty(code) && code != "NG")
+            if (!string.IsNullOrWhiteSpace(code) && code != "NG")
                 return true;
             else
                 return false;
@@ -106,23 +103,15 @@ namespace EC04_EMIReadCode
                 tableLayoutPanel.RowStyles.Add(new ColumnStyle(SizeType.Percent, 65));
                 tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayoutPanel.ColumnCount));
                 tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayoutPanel.ColumnCount));
-                //tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayoutPanel.ColumnCount));
-                //tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100 / tableLayoutPanel.ColumnCount));
-                _leftBurn = new BurnForm(DataContent.SystemConfig.LeftBurn.IP, DataContent.SystemConfig.LeftBurn.Port, "左烧录工站");
-                tableLayoutPanel = LoadFrm(tableLayoutPanel, _leftBurn, 0, 0);
-                //_rightBurn = new BurnForm(DataContent.SystemConfig.RightBurn.IP, DataContent.SystemConfig.RightBurn.Port, "右烧录工站");
-                //tableLayoutPanel = LoadFrm(tableLayoutPanel, _rightBurn, 1, 0);
-                _leftRadiumCarving = new BurnForm(DataContent.SystemConfig.RightRadiumCarving.IP, DataContent.SystemConfig.RightRadiumCarving.Port, "左镭雕工站");
-                tableLayoutPanel = LoadFrm(tableLayoutPanel, _leftRadiumCarving, 1, 0);
-                //_rightRadiumCarving = new BurnForm(DataContent.SystemConfig.RightRadiumCarving.IP, DataContent.SystemConfig.RightRadiumCarving.Port, "右镭雕工站");
-                //tableLayoutPanel = LoadFrm(tableLayoutPanel, _rightRadiumCarving, 3, 0);
+                _frmBurn = new BurnForm(DataContent.SystemConfig.LeftBurn.IP, DataContent.SystemConfig.LeftBurn.Port, "烧录工站");
+                tableLayoutPanel = LoadFrm(tableLayoutPanel, _frmBurn, 0, 0);
+                _frmRadiumCarving = new FrmRadiumCarving(DataContent.SystemConfig.RadiumCarving.IP, DataContent.SystemConfig.RadiumCarving.Port, "左镭雕工站");
+                tableLayoutPanel = LoadFrm(tableLayoutPanel, _frmRadiumCarving, 1, 0);
 
-                _burnCamera = new FrmVisionDisplay(DataContent.SystemConfig.LeftVppPath, DataContent.SystemConfig.LeftCamera.Name);
+                _burnCamera = new FrmVisionDisplay(DataContent.SystemConfig.LeftVppPath, DataContent.SystemConfig.LeftCamera.Name,"烧录相机");
                 tableLayoutPanel = LoadFrm(tableLayoutPanel, _burnCamera, 0, 1);
-                //tableLayoutPanel.SetColumnSpan(_burnCamera, 2);
-                _radiumCarvingCamera = new FrmVisionDisplay(DataContent.SystemConfig.RightVppPath, DataContent.SystemConfig.RightCamera.Name);
+                _radiumCarvingCamera = new FrmVisionDisplay(DataContent.SystemConfig.RightVppPath, DataContent.SystemConfig.RightCamera.Name,"打标相机");
                 tableLayoutPanel = LoadFrm(tableLayoutPanel, _radiumCarvingCamera, 1, 1);
-                //tableLayoutPanel.SetColumnSpan(_radiumCarvingCamera, 2);
             }
             catch (Exception ex)
             {
@@ -135,8 +124,17 @@ namespace EC04_EMIReadCode
             {
                 while (true)
                 {
-                    if (_plchelper.Read(_leftReadCodeAddress) != 1)
+                    if (_plchelper.Read(_leftBurnAddress) != 1)
                         continue;
+                    if (DataContent.RadiumCarving)
+                    {
+                        _plchelper.Write(_leftBurnAddress, PLCResult.ReadCodeOK);
+                        _plchelper.Write(_rightBurnAddress, PLCResult.ReadCodeOK);
+                        _plchelper.Write(_leftBurnResultAddress, PLCResult.ReadCodeOK);
+                        _plchelper.Write(_rightBurnResultAddress, PLCResult.ReadCodeOK);
+                        LogManager.Logs.Info("跳过烧录功能！");
+                        continue;
+                    }
                     LogManager.Logs.Info("读取到烧录机启动信号");
                     string leftSN = string.Empty;
                     string rightSN = string.Empty;
@@ -144,56 +142,37 @@ namespace EC04_EMIReadCode
                     var result = _burnCamera.Run(DataContent.SystemConfig.LeftCamera.ExposureTime, DataContent.SystemConfig.LeftCamera.Gain);
                     leftSN = result.Item1;
                     rightSN = result.Item2;
+                    ///烧录
+                    if (CodeParse(leftSN) && DataContent.SystemConfig.ContainsBurnCode(leftSN))
+                    {
+                        _plchelper.Write(_leftBurnAddress, PLCResult.ReadCodeOK);
+                    }
+                    else
+                        _plchelper.Write(_leftBurnAddress, PLCResult.ReadCodeNG);
 
-                    var leftTask = new TaskFactory().StartNew<bool>(obj =>
+                    if (CodeParse(rightSN) && DataContent.SystemConfig.ContainsBurnCode(rightSN))
                     {
-                        var code = obj.ToString();
-                        if (!CodeParse(code))
-                        {
-                            _plchelper.Write(_leftReadCodeAddress, PLCResult.ReadCodeNG);
-                            _plchelper.Write(_leftBurnAddress, PLCResult.ReadCodeNG);
-                            return false;
-                        }
-                        else
-                            _plchelper.Write(_leftReadCodeAddress, PLCResult.ReadCodeOK);
-                        if (_leftBurn.SendMsg(code))
-                        {
-                            _plchelper.Write(_leftBurnAddress, PLCResult.ReadCodeOK);
-                        }
-                        else
-                        {
-                            _plchelper.Write(_leftBurnAddress, PLCResult.ReadCodeNG);
-                            return false;
-                        }
-                        return true;
-                    }, leftSN);
-                    var rightTask = new TaskFactory().StartNew<bool>(obj =>
+                        _plchelper.Write(_rightBurnAddress, PLCResult.ReadCodeOK);
+                    }
+                    else
+                        _plchelper.Write(_rightBurnAddress, PLCResult.ReadCodeNG);
+                    ///烧录
+                    var burnResult = _frmBurn.SendMsg(leftSN, rightSN);
+                    if (burnResult)
                     {
-                        var code = obj.ToString();
-                        if (!CodeParse(code))
-                        {
-                            _plchelper.Write(_rightReadCodeAddress, PLCResult.ReadCodeNG);
-                            _plchelper.Write(_rightBurnAddress, PLCResult.ReadCodeNG);
-                            return false;
-                        }
-                        else
-                            _plchelper.Write(_rightReadCodeAddress, PLCResult.ReadCodeOK);
-                        if (_leftBurn.SendMsg(code))
-                        {
-                            _plchelper.Write(_rightBurnAddress, PLCResult.ReadCodeOK);
-                        }
-                        else
-                        {
-                            _plchelper.Write(_rightBurnAddress, PLCResult.ReadCodeNG);
-                            return false;
-                        }
-                        return true;
-                    }, rightSN);
-                    Task.WaitAll(leftTask, rightTask);
-                    DataContent.SystemConfig.AddBurnCode(leftTask.Result ? "" : leftSN);
-                    DataContent.SystemConfig.AddBurnCode(rightTask.Result ? "" : rightSN);
+                        _plchelper.Write(_leftBurnResultAddress, CodeParse(leftSN) ? PLCResult.ResultOK : PLCResult.ResultNG);
+                        _plchelper.Write(_rightBurnResultAddress, CodeParse(rightSN) ? PLCResult.ResultOK : PLCResult.ResultNG);
+                    }
+                    else
+                    {
+                        _plchelper.Write(_leftBurnResultAddress, PLCResult.ResultNG);
+                        _plchelper.Write(_rightBurnResultAddress, PLCResult.ResultNG);
+                       
+                    }
+                    DataContent.SystemConfig.AddBurnCode(burnResult ? "" : leftSN);
+                    DataContent.SystemConfig.AddBurnCode(burnResult ? "" : rightSN);
                 }
-            },TaskCreationOptions.LongRunning);
+            }, TaskCreationOptions.LongRunning);
             new TaskFactory().StartNew(() =>
             {
                 while (true)
@@ -201,6 +180,15 @@ namespace EC04_EMIReadCode
                     if (_plchelper.Read(_leftRadiumCarvingAddress) != 1)
                         continue;
                     LogManager.Logs.Info("读取到镭雕机启动信号");
+                    if (DataContent.RadiumCarving)
+                    {
+                        _plchelper.Write(_leftRadiumCarvingAddress, PLCResult.ReadCodeOK);
+                        _plchelper.Write(_rightRadiumCarvingAddress, PLCResult.ReadCodeOK);
+                        _plchelper.Write(_leftRadiumCarvingResultAddress, PLCResult.ReadCodeOK);
+                        _plchelper.Write(_rightRadiumCarvingResultAddress, PLCResult.ReadCodeOK);
+                        LogManager.Logs.Info("跳过镭雕功能！");
+                        continue;
+                    }
                     
                     string leftSN = string.Empty;
                     string rightSN = string.Empty;
@@ -208,34 +196,31 @@ namespace EC04_EMIReadCode
                     var result = _radiumCarvingCamera.Run(DataContent.SystemConfig.LeftCamera.ExposureTime, DataContent.SystemConfig.LeftCamera.Gain);
                     leftSN = result.Item1;
                     rightSN = result.Item2;
-                    ///烧录 
-                    var leftTask = new TaskFactory().StartNew(obj =>
+                    ///镭雕
+                    if (CodeParse(leftSN) && DataContent.SystemConfig.ContainsBurnCode(leftSN))
                     {
-                        var code = obj.ToString();
-                        if (CodeParse(code) && DataContent.SystemConfig.ContainsBurnCode(code))
-                        {
-                            _plchelper.Write(_leftRadiumCarvingAddress, PLCResult.ReadCodeOK);
-                            _leftRadiumCarving.SendMsg(code);
-                        }
-                        else
-                        {
-                            _plchelper.Write(_leftRadiumCarvingAddress, PLCResult.ReadCodeNG);
-                        }
-                    }, leftSN);
-                    var rightTask = new TaskFactory().StartNew(obj =>
+                        _plchelper.Write(_leftRadiumCarvingAddress, PLCResult.ReadCodeOK);
+                    }else
+                        _plchelper.Write(_leftRadiumCarvingAddress, PLCResult.ReadCodeNG);
+
+                    if(CodeParse(rightSN) && DataContent.SystemConfig.ContainsBurnCode(rightSN))
                     {
-                        var code = obj.ToString();
-                        if (CodeParse(code) && DataContent.SystemConfig.ContainsBurnCode(code))
-                        {
-                            _plchelper.Write(_rightRadiumCarvingAddress, PLCResult.ReadCodeOK);
-                            _leftRadiumCarving.SendMsg(code);
-                        }
-                        else
-                        {
-                            _plchelper.Write(_rightRadiumCarvingAddress, PLCResult.ReadCodeNG);
-                        }
-                    }, rightSN);
-                    Task.WaitAll(leftTask, rightTask);
+                        _plchelper.Write(_rightRadiumCarvingAddress, PLCResult.ReadCodeOK);
+                    }
+                    else
+                        _plchelper.Write(_rightRadiumCarvingAddress, PLCResult.ReadCodeNG);
+                    ///镭雕
+                    var radiumCarvingResult = _frmRadiumCarving.SendMsg(leftSN,rightSN);
+                    if (radiumCarvingResult)
+                    {
+                        _plchelper.Write(_leftRadiumCarvingResultAddress, CodeParse(leftSN) ? PLCResult.ResultOK : PLCResult.ResultNG);
+                        _plchelper.Write(_rightRadiumCarvingAddress,CodeParse(rightSN)?PLCResult.ResultOK: PLCResult.ResultNG);
+                    }
+                    else
+                    {
+                        _plchelper.Write(_leftRadiumCarvingResultAddress, PLCResult.ResultNG);
+                        _plchelper.Write(_rightRadiumCarvingResultAddress, PLCResult.ResultNG);
+                    }
                 }
             },TaskCreationOptions.LongRunning);
         }
@@ -255,7 +240,11 @@ namespace EC04_EMIReadCode
         }
         private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
+            _burnCamera.Close();
+            _radiumCarvingCamera.Close();
             _plchelper.Close();
+            _frmBurn.Close();
+            _frmRadiumCarving.Close();
         }
     }
 }

@@ -30,18 +30,18 @@
         {
             this.components = new System.ComponentModel.Container();
             this.gbxTitle = new System.Windows.Forms.GroupBox();
+            this.btnLock = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.tbxSN = new System.Windows.Forms.TextBox();
             this.lblSn = new System.Windows.Forms.Label();
             this.lblTime = new System.Windows.Forms.Label();
             this.lblResult = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnTest = new System.Windows.Forms.Button();
             this.lblState = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnLock = new System.Windows.Forms.Button();
             this.btnBurn = new System.Windows.Forms.Button();
-            this.btnMesCode = new System.Windows.Forms.Button();
-            this.btnTest = new System.Windows.Forms.Button();
+            this.cbxDoWork = new System.Windows.Forms.CheckBox();
             this.gbxTitle.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -60,10 +60,22 @@
             this.gbxTitle.Margin = new System.Windows.Forms.Padding(2);
             this.gbxTitle.Name = "gbxTitle";
             this.gbxTitle.Padding = new System.Windows.Forms.Padding(2);
-            this.gbxTitle.Size = new System.Drawing.Size(390, 208);
+            this.gbxTitle.Size = new System.Drawing.Size(390, 205);
             this.gbxTitle.TabIndex = 0;
             this.gbxTitle.TabStop = false;
             this.gbxTitle.Text = "烧录";
+            // 
+            // btnLock
+            // 
+            this.btnLock.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnLock.Font = new System.Drawing.Font("宋体", 9F);
+            this.btnLock.Location = new System.Drawing.Point(320, 0);
+            this.btnLock.Name = "btnLock";
+            this.btnLock.Size = new System.Drawing.Size(39, 23);
+            this.btnLock.TabIndex = 0;
+            this.btnLock.Text = "解锁";
+            this.btnLock.UseVisualStyleBackColor = true;
+            this.btnLock.Click += new System.EventHandler(this.btnLock_Click);
             // 
             // panel1
             // 
@@ -75,7 +87,7 @@
             this.panel1.Enabled = false;
             this.panel1.Location = new System.Drawing.Point(2, 21);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(266, 185);
+            this.panel1.Size = new System.Drawing.Size(284, 182);
             this.panel1.TabIndex = 4;
             // 
             // tbxSN
@@ -121,17 +133,27 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbxDoWork);
             this.groupBox1.Controls.Add(this.btnTest);
-            this.groupBox1.Controls.Add(this.btnMesCode);
             this.groupBox1.Controls.Add(this.btnBurn);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Enabled = false;
-            this.groupBox1.Location = new System.Drawing.Point(268, 21);
+            this.groupBox1.Location = new System.Drawing.Point(286, 21);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(120, 185);
+            this.groupBox1.Size = new System.Drawing.Size(102, 182);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "测试";
+            // 
+            // btnTest
+            // 
+            this.btnTest.Location = new System.Drawing.Point(6, 59);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(85, 23);
+            this.btnTest.TabIndex = 2;
+            this.btnTest.Text = "测试";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // lblState
             // 
@@ -147,22 +169,10 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // btnLock
-            // 
-            this.btnLock.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnLock.Font = new System.Drawing.Font("宋体", 9F);
-            this.btnLock.Location = new System.Drawing.Point(320, 0);
-            this.btnLock.Name = "btnLock";
-            this.btnLock.Size = new System.Drawing.Size(39, 23);
-            this.btnLock.TabIndex = 0;
-            this.btnLock.Text = "解锁";
-            this.btnLock.UseVisualStyleBackColor = true;
-            this.btnLock.Click += new System.EventHandler(this.btnLock_Click);
-            // 
             // btnBurn
             // 
             this.btnBurn.Font = new System.Drawing.Font("宋体", 9F);
-            this.btnBurn.Location = new System.Drawing.Point(67, 73);
+            this.btnBurn.Location = new System.Drawing.Point(43, 88);
             this.btnBurn.Name = "btnBurn";
             this.btnBurn.Size = new System.Drawing.Size(48, 23);
             this.btnBurn.TabIndex = 0;
@@ -170,32 +180,22 @@
             this.btnBurn.UseVisualStyleBackColor = true;
             this.btnBurn.Click += new System.EventHandler(this.btnBurn_Click);
             // 
-            // btnMesCode
+            // cbxDoWork
             // 
-            this.btnMesCode.Font = new System.Drawing.Font("宋体", 9F);
-            this.btnMesCode.Location = new System.Drawing.Point(6, 73);
-            this.btnMesCode.Name = "btnMesCode";
-            this.btnMesCode.Size = new System.Drawing.Size(62, 23);
-            this.btnMesCode.TabIndex = 1;
-            this.btnMesCode.Text = "获取码";
-            this.btnMesCode.UseVisualStyleBackColor = true;
-            this.btnMesCode.Click += new System.EventHandler(this.btnMesCode_Click);
-            // 
-            // btnTest
-            // 
-            this.btnTest.Location = new System.Drawing.Point(6, 44);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(109, 23);
-            this.btnTest.TabIndex = 2;
-            this.btnTest.Text = "测试";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            this.cbxDoWork.AutoSize = true;
+            this.cbxDoWork.Location = new System.Drawing.Point(6, 34);
+            this.cbxDoWork.Name = "cbxDoWork";
+            this.cbxDoWork.Size = new System.Drawing.Size(59, 20);
+            this.cbxDoWork.TabIndex = 4;
+            this.cbxDoWork.Text = "屏蔽";
+            this.cbxDoWork.UseVisualStyleBackColor = true;
+            this.cbxDoWork.CheckedChanged += new System.EventHandler(this.cbxDoWork_CheckedChanged);
             // 
             // BurnForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(390, 208);
+            this.ClientSize = new System.Drawing.Size(390, 205);
             this.Controls.Add(this.gbxTitle);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "BurnForm";
@@ -205,6 +205,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -221,8 +222,8 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox tbxSN;
         private System.Windows.Forms.Button btnLock;
-        private System.Windows.Forms.Button btnMesCode;
-        private System.Windows.Forms.Button btnBurn;
         private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.Button btnBurn;
+        private System.Windows.Forms.CheckBox cbxDoWork;
     }
 }
