@@ -11,13 +11,12 @@ namespace EC04_EMIReadCode.Comm
     {
         public static void OnlyRun(string name,Action action)
         {
-            bool running = true;
-            System.Threading.Mutex mutex = new System.Threading.Mutex(false, name,out running);
+            bool running = false;
+            System.Threading.Mutex mutex = new System.Threading.Mutex(true, name,out running);
             try
             {
-                if(running)
-                //running = !mutex.WaitOne(0, false);            //这一句有可能会报错，所以要Try起来
-                action();
+                if (running)
+                    action();
             }
             catch (Exception ex)
             {

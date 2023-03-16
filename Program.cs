@@ -26,8 +26,8 @@ namespace EC04_EMIReadCode
                 LogManager.PLCLogs.Debug("PLC日志初始化成功");
                 LogManager.RadiumCarvingLogs.Debug("镭雕日志初始化成功");
                 LogManager.BurnLogs.Debug("烧录日志初始化成功");
+                Application.Run(new FrmMain());
             });
-            Application.Run(new FrmMain());
         }
     }
 }

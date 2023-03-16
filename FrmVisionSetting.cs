@@ -25,10 +25,10 @@ namespace EC04_EMIReadCode
                 DataContent.SystemConfig.LeftCamera = cameraConfig;
                 leftcallback(toolblock).Wait();
             });
-            _rightFrmVisionUpdate = new FrmVisionUpdate(DataContent.SystemConfig.RightVppPath, DataContent.SystemConfig.RightCamera, (vpppath, cameraConfig, toolblock) =>
+            _rightFrmVisionUpdate = new FrmVisionUpdate(DataContent.SystemConfig.RigthVppPath, DataContent.SystemConfig.RigthCamera, (vpppath, cameraConfig, toolblock) =>
             {
-                DataContent.SystemConfig.RightVppPath = vpppath;
-                DataContent.SystemConfig.RightCamera = cameraConfig;
+                DataContent.SystemConfig.RigthVppPath = vpppath;
+                DataContent.SystemConfig.RigthCamera = cameraConfig;
                 rightcallback(toolblock).Wait();
             });
 

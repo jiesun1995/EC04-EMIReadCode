@@ -6,7 +6,9 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,119 +19,157 @@ namespace EC04_EMIReadCode
     /// </summary>
     public partial class BurnForm : Form
     {
-        //private readonly SocketClient _socketClient;
         private readonly SocketServer _socketServer;
         private readonly Stopwatch _stopwatch;
-        private string _code=string.Empty;
+        private Dictionary<string,Socket> _socketClients;
+        private byte[] buffer = new byte[1024 * 1024 * 2];
 
         public BurnForm(string ip,int port,string title="烧录")
         {
             InitializeComponent();
-            _socketServer = new SocketServer(ip, port);
+            _socketClients = new Dictionary<string, Socket>();
+            _socketServer = new SocketServer(ip, port,client=>
+            {
+                client.ReceiveTimeout = DataContent.SystemConfig.SocketTimeout;
+                var length = client.Receive(buffer);
+                var data = Encoding.UTF8.GetString(buffer, 0, length);
+                _socketClients.Add(data,client);
+            });
             _socketServer.StartListen();
             _stopwatch = new Stopwatch();
             gbxTitle.Text = title;
             timer1.Start();
         }
-        private string BuildEmpty(int length)
+        private bool ValidateCode(string sn)
         {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < length; i++)
+            if (!string.IsNullOrWhiteSpace(sn) && sn != "NG")
             {
-                sb.Append(" ");
-            }
-            return sb.ToString();
-        }
-        private bool CodeParse(string code)
-        {
-            if (!string.IsNullOrWhiteSpace(code) && code != "NG")
-                return true;
-            else
-                return false;
-        }
-        private string QueryCode(string leftSN, string rightSN)
-        {
-
-            try
-            {
-                var leftcode = CodeParse(leftSN) ? leftSN : BuildEmpty(DataContent.SystemConfig.CodeLength);
-                var rightcode = CodeParse(rightSN) ? rightSN : BuildEmpty(DataContent.SystemConfig.CodeLength);
-                if (leftcode.Length != DataContent.SystemConfig.CodeLength)
+                if (sn.Length != DataContent.SystemConfig.CodeLength)
                 {
-                    LogManager.BurnLogs.Error("左边烧录长度不符！");
-                    return string.Empty;
-                }
-                if (rightcode.Length != DataContent.SystemConfig.CodeLength)
-                {
-                    LogManager.BurnLogs.Error("右边烧录长度不符！");
-                }
-                return $"{leftcode}{rightcode}";
-            }
-            catch (Exception ex)
-            {
-                LogManager.BurnLogs.Error(ex);
-            }
-            return string.Empty;
-        }
-        private bool Receive(string code)
-        {
-            var data = false;
-            try
-            {
-                if (string.IsNullOrWhiteSpace(code))
-                {
-                    SystemHelper.UIShow(btnBurn, () => { btnBurn.BackColor = Color.Red; });
+                    LogManager.BurnLogs.Warn("长度不符！");
                     return false;
-                }
-                LogManager.BurnLogs.Info($"烧录数据{code}");
-                _socketServer.SendMessage(code);
-                data = true;
-                SystemHelper.UIShow(btnBurn, () => { btnBurn.BackColor = Color.Green; });
-            }
-            catch (Exception ex)
-            {
-                LogManager.BurnLogs.Error(ex);
-                SystemHelper.UIShow(btnBurn, () => { btnBurn.BackColor = Color.Red; });
-            }
-            var result = data;
-            return result;
-        }
-        private void ShowUI(bool result)
-        {
-            SystemHelper.UIShow(btnBurn, () =>
-            {
-                if (result)
-                {
-                    lblResult.Text = $"烧录结果:{result}";
-                    lblResult.BackColor = Color.Gray;
                 }
                 else
                 {
-                    lblResult.Text = $"烧录结果:{result}";
-                    lblResult.BackColor = Color.Red;
+                    return true;
                 }
+            }
+            else
+            {
+                LogManager.BurnLogs.Warn($"SN:{sn}为空或者ng！");
+                return false;
+            }
+        }
+        private bool Send(string clientName, string code)
+        {
+            var result = false;
 
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                return false;
+            }
+            LogManager.BurnLogs.Info($"烧录数据{code}");
+            if (!_socketClients.ContainsKey(clientName))
+            {
+                LogManager.BurnLogs.Error($"不存在{clientName}客户端！");
+                return false;
+            }
+            var client = _socketClients[clientName];
+            if (client.Connected)
+            {
+                try
+                {
+                    LogManager.BurnLogs.Debug($"向客户端{client.RemoteEndPoint.ToString()}，发送消息{code}");
+                    client.Send(Encoding.UTF8.GetBytes(code));
+                    var length = client.Receive(buffer);
+                    var data = Encoding.UTF8.GetString(buffer, 0, length);
+                    LogManager.BurnLogs.Debug($"接收客户端{ client.RemoteEndPoint.ToString()},消息{data}");
+                    if (string.IsNullOrEmpty(data))
+                    {
+                        client.Shutdown(SocketShutdown.Both);
+                        client.Close();
+                    }
+                    result = true;
+                }
+                catch(SocketException ex)
+                {
+                    if (ex.ErrorCode == 10060)///超时
+                    {
+
+                    }
+                    else if(ex.ErrorCode == 10053)///连接断开
+                    {
+                        _socketClients.Remove(clientName);
+                    }
+                    LogManager.BurnLogs.Error(ex);
+                }
+                catch (Exception ex)
+                {
+                    LogManager.BurnLogs.Error(ex);
+                }
+            }
+            else
+            {
+                _socketClients.Remove(clientName);
+            }
+            return result;
+        }
+        private void ShowUI(bool leftResult,bool rigthResult,string leftSN,string rigthSN)
+        {
+            SystemHelper.UIShow(btnRigthBurn, () =>
+            {
+                btnRigthBurn.BackColor= rigthResult ? Color.YellowGreen : Color.Red;
+                btnLeftBurn.BackColor= leftResult ? Color.YellowGreen : Color.Red;
+                tbxLeftSN.Text = leftSN;
+                tbxRightSN.Text = rigthSN;
                 lblTime.Text = $"烧录耗时:{_stopwatch.Elapsed.TotalMilliseconds}ms";
             });
         }
-        public bool SendMsg(string leftSN,string rightSN)
+        public bool SendMsg(string leftSN,string rigthSN)
         {
             _stopwatch.Restart();
-            var code = QueryCode(leftSN,rightSN);
-            var result = Receive(code);
+            var leftTask = new TaskFactory().StartNew<bool>(obj =>
+            {
+                var code = obj.ToString();
+                if (ValidateCode(code))
+                {
+                    var result = Send(DataContent.SystemConfig.LeftClientName, code);
+                    return result;
+                }
+                return false;
+            },leftSN);
+            var rigthTask = new TaskFactory().StartNew<bool>(obj =>
+            {
+                var code = obj.ToString();
+                if (ValidateCode(code))
+                {
+                    var result = Send(DataContent.SystemConfig.RigthClientName, code);
+                    return result;
+                }
+                return false;
+            }, rigthSN);
+            Task.WaitAll(leftTask, rigthTask);
             _stopwatch.Stop();
-            ShowUI(result);
-            return result;
+            var burnResult = leftTask.Result && rigthTask.Result ? true : false;
+            ShowUI(leftTask.Result,rigthTask.Result,leftSN,rigthSN);
+            return burnResult;
         }
 
         private void BurnForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             _socketServer.Close();
+            if (_socketClients .Count > 0)
+            {
+                foreach (var client in _socketClients)
+                {
+                    client.Value.Shutdown(SocketShutdown.Both);
+                }
+            }
         }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lblState.BackColor = _socketServer != null && _socketServer.ClientCount>0 ? Color.Green : Color.Red;
+            lblRigthState.BackColor = _socketServer != null && _socketClients.ContainsKey(DataContent.SystemConfig.RigthClientName) ? Color.GreenYellow: Color.Red;
+            lblLeftState.BackColor= _socketServer != null && _socketClients.ContainsKey(DataContent.SystemConfig.LeftClientName) ? Color.GreenYellow: Color.Red;
         }
 
         private void btnLock_Click(object sender, EventArgs e)
@@ -148,35 +188,44 @@ namespace EC04_EMIReadCode
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            string leftSN = string.Empty;
-            string rightSN = string.Empty;
-            var sns = tbxSN.Text.Split('\n');
-            leftSN = sns.Length > 0 ? sns[0].Replace("\r", "") : "NG";
-            rightSN = sns.Length > 1 ? sns[1].Replace("\r", "") : "NG";
-            _stopwatch.Restart();
-            var code = QueryCode(leftSN,rightSN);
-            var result = Receive(code);
-            _stopwatch.Stop();
-            ShowUI(result);
-        }
-
-        private void btnBurn_Click(object sender, EventArgs e)
-        {
-            string leftSN = string.Empty;
-            string rightSN = string.Empty;
-            var sns = tbxSN.Text.Split('\n');
-            leftSN = sns.Length > 0 ? sns[0].Replace("\r", "") : "NG";
-            rightSN = sns.Length > 1 ? sns[1].Replace("\r", "") : "NG";
-            _stopwatch.Restart();
-            var code = QueryCode(leftSN, rightSN);
-            var result = Receive(code);
-            _stopwatch.Stop();
-            ShowUI(result);
+            string leftSN = tbxLeftSN.Text;
+            string rigthSN = tbxRightSN.Text;
+            SendMsg(leftSN, rigthSN);
         }
 
         private void cbxDoWork_CheckedChanged(object sender, EventArgs e)
         {
             DataContent.Burn = cbxDoWork.Checked;
+        }
+
+        private void btnLeftBurn_Click(object sender, EventArgs e)
+        {
+            var leftTask = new TaskFactory().StartNew<bool>(obj =>
+            {
+                var code = obj.ToString();
+                if (ValidateCode(code))
+                {
+                    var result = Send(DataContent.SystemConfig.LeftClientName, code);
+                    return result;
+                }
+                return false;
+            }, tbxLeftSN.Text);
+            btnLeftBurn.BackColor = leftTask.Result ? Color.YellowGreen : Color.Red;
+        }
+
+        private void btnRigthBurn_Click(object sender, EventArgs e)
+        {
+            var rigthTask = new TaskFactory().StartNew<bool>(obj =>
+            {
+                var code = obj.ToString();
+                if (ValidateCode(code))
+                {
+                    var result = Send(DataContent.SystemConfig.RigthClientName, code);
+                    return result;
+                }
+                return false;
+            }, tbxRightSN.Text);
+            btnRigthBurn.BackColor = rigthTask.Result ? Color.YellowGreen : Color.Red;
         }
     }
 }

@@ -179,7 +179,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(681, 55);
             this.label1.TabIndex = 4;
-            this.label1.Text = "EMI焊接";
+            this.label1.Text = "EMI铁壳打标";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnLogin

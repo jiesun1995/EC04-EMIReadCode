@@ -34,7 +34,7 @@ namespace EC04_EMIReadCode.Comm
         /// <summary>
         /// 日志框架初始化
         /// </summary>
-        public static void Init(ListView listView)
+        public static void Init(ListView listView = null)
         {
             log4net.Config.XmlConfigurator.Configure();
             var logs = log4net.LogManager.GetLogger("Logs");
@@ -90,14 +90,13 @@ namespace EC04_EMIReadCode.Comm
                 return;
             var task = Task.Factory.StartNew(() =>
             {
-                if (_queue.Count <= 0)
+                if (_queue.Count <= 0 )
                     return;
                 Tuple<string, Color> val = null;
                 if (_queue.TryDequeue(out val))
                 {
-                    _listView.Invoke((EventHandler)delegate
+                    SystemHelper.UIShow(_listView, () =>
                     {
-                        _listView.BeginUpdate();
                         ListViewItem listViewItem = new ListViewItem();
                         listViewItem.SubItems.Add(DateTime.Now.ToString("HH:mm:ss"));
                         listViewItem.SubItems.Add(val.Item1);
@@ -110,7 +109,6 @@ namespace EC04_EMIReadCode.Comm
                             _listView.Items[_listView.Items.Count - 1].EnsureVisible();
                         }
                         _listView.EnsureVisible(_listView.Items.Count - 1);
-                        _listView.EndUpdate();
                     });
                 }
             });

@@ -31,6 +31,7 @@
             this.cogToolBlockEditV21 = new Cognex.VisionPro.ToolBlock.CogToolBlockEditV2();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
             this.nunGain = new System.Windows.Forms.NumericUpDown();
             this.nunExposureTime = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
@@ -41,7 +42,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.button2 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.cogToolBlockEditV21)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -69,9 +69,9 @@
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Font = new System.Drawing.Font("宋体", 13F);
             this.groupBox1.Location = new System.Drawing.Point(0, 0);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(941, 513);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
@@ -91,15 +91,26 @@
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(2, 22);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(937, 80);
             this.panel1.TabIndex = 4;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(627, 3);
+            this.button2.Margin = new System.Windows.Forms.Padding(2);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(141, 33);
+            this.button2.TabIndex = 12;
+            this.button2.Text = "运行";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // nunGain
             // 
             this.nunGain.Location = new System.Drawing.Point(520, 8);
-            this.nunGain.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nunGain.Margin = new System.Windows.Forms.Padding(2);
             this.nunGain.Name = "nunGain";
             this.nunGain.Size = new System.Drawing.Size(90, 27);
             this.nunGain.TabIndex = 11;
@@ -107,7 +118,12 @@
             // nunExposureTime
             // 
             this.nunExposureTime.Location = new System.Drawing.Point(306, 10);
-            this.nunExposureTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.nunExposureTime.Margin = new System.Windows.Forms.Padding(2);
+            this.nunExposureTime.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
             this.nunExposureTime.Name = "nunExposureTime";
             this.nunExposureTime.Size = new System.Drawing.Size(90, 27);
             this.nunExposureTime.TabIndex = 10;
@@ -135,7 +151,7 @@
             // tbxName
             // 
             this.tbxName.Location = new System.Drawing.Point(84, 8);
-            this.tbxName.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbxName.Margin = new System.Windows.Forms.Padding(2);
             this.tbxName.Name = "tbxName";
             this.tbxName.Size = new System.Drawing.Size(141, 27);
             this.tbxName.TabIndex = 6;
@@ -153,7 +169,7 @@
             // tbxVppPath
             // 
             this.tbxVppPath.Location = new System.Drawing.Point(84, 48);
-            this.tbxVppPath.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tbxVppPath.Margin = new System.Windows.Forms.Padding(2);
             this.tbxVppPath.Name = "tbxVppPath";
             this.tbxVppPath.Size = new System.Drawing.Size(414, 27);
             this.tbxVppPath.TabIndex = 4;
@@ -162,7 +178,7 @@
             // button1
             // 
             this.button1.Location = new System.Drawing.Point(520, 43);
-            this.button1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(141, 33);
             this.button1.TabIndex = 3;
@@ -184,24 +200,13 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(627, 3);
-            this.button2.Margin = new System.Windows.Forms.Padding(2);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(141, 33);
-            this.button2.TabIndex = 12;
-            this.button2.Text = "运行";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
             // FrmVisionUpdate
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(941, 513);
             this.Controls.Add(this.groupBox1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FrmVisionUpdate";
             this.Text = "FrmVisionUpdate";
             ((System.ComponentModel.ISupportInitialize)(this.cogToolBlockEditV21)).EndInit();

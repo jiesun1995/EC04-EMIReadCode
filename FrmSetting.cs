@@ -14,26 +14,25 @@ namespace EC04_EMIReadCode
     public partial class FrmSetting : Form
     {
         private SystemConfig _systemConfig;
-        //private readonly FrmInternetConfig _leftBurn;
-        //private readonly FrmInternetConfig _rightBurn;
+        private readonly FrmInternetConfig _burn;
         private readonly FrmInternetConfig _radiumCarving;
-        //private readonly FrmInternetConfig _rightRadiumCarving;
         private readonly FrmInternetConfig _plcConfig;
         public FrmSetting()
         {
-            _systemConfig = DataContent.SystemConfig;
+            _systemConfig = new SystemConfig();
+            var json = JsonHelper.SerializeObject(DataContent.SystemConfig);
+            _systemConfig = JsonHelper.DeserializeObject<SystemConfig>(json);
             InitializeComponent();
-            //_leftBurn = new FrmInternetConfig(_systemConfig.LeftBurn.IP, _systemConfig.LeftBurn.Port);
-            //_rightBurn = new FrmInternetConfig(_systemConfig.RightBurn.IP, _systemConfig.RightBurn.Port);
+            _burn = new FrmInternetConfig(_systemConfig.Burn.IP, _systemConfig.Burn.Port,"烧录机服务配置");
             _radiumCarving = new FrmInternetConfig(_systemConfig.RadiumCarving.IP, _systemConfig.RadiumCarving.Port,"镭雕服务配置");
-            //_rightRadiumCarving = new FrmInternetConfig(_systemConfig.RightRadiumCarving.IP, _systemConfig.RightRadiumCarving.Port);
             _plcConfig = new FrmInternetConfig(_systemConfig.PLCConfig.IP, _systemConfig.PLCConfig.Port,"PLC网络配置");
-            nunCodeLength.Value = _systemConfig.CodeLength;
-            //LoadFrm(tableLayoutPanel1, _leftBurn, 0, 0);
-            //LoadFrm(tableLayoutPanel1, _rightBurn, 1, 0);
+            LoadFrm(tableLayoutPanel1, _burn, 1, 0);
             LoadFrm(tableLayoutPanel1, _radiumCarving, 0, 0);
-            //LoadFrm(tableLayoutPanel1, _rightRadiumCarving, 0, 1);
             LoadFrm(tableLayoutPanel1, _plcConfig, 1, 1);
+            tbxLeftCode.DataBindings.Add(new Binding("Text", _systemConfig, "LeftClientName"));
+            tbxrigthCode.DataBindings.Add(new Binding("Text", _systemConfig, "RigthClientName"));
+            nunCodeLength.DataBindings.Add(new Binding("Value", _systemConfig, "CodeLength"));
+            tbxTimeOut.DataBindings.Add(new Binding("Text", _systemConfig, "SocketTimeout"));
         }
         private TableLayoutPanel LoadFrm(TableLayoutPanel tableLayout, Form form, int col, int row)
         {
@@ -52,21 +51,11 @@ namespace EC04_EMIReadCode
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            var json = JsonHelper.SerializeObject(_systemConfig);
-            var systemConfig = JsonHelper.DeserializeObject<SystemConfig>(json);
-            //systemConfig.LeftBurn.IP = _leftBurn?.IP;
-            //systemConfig.LeftBurn.Port = _leftBurn.Port;
-            //systemConfig.RightBurn.IP = _rightBurn?.IP;
-            //systemConfig.RightBurn.Port = _rightBurn.Port;
-            systemConfig.RadiumCarving.IP = _radiumCarving.IP;
-            systemConfig.RadiumCarving.Port = _radiumCarving.Port;
-            //systemConfig.RightRadiumCarving.IP = _rightRadiumCarving.IP;
-            //systemConfig.RightRadiumCarving.Port = _rightRadiumCarving.Port;
-            systemConfig.PLCConfig.IP = _plcConfig.IP;
-            systemConfig.PLCConfig.Port = _plcConfig.Port;
-            systemConfig.CodeLength = Convert.ToInt32(nunCodeLength.Value);
-
-            DataContent.SetConfig(systemConfig);
+            _systemConfig.Burn = _burn.StationData;
+            _systemConfig.RadiumCarving = _radiumCarving.StationData;
+            _systemConfig.PLCConfig.IP = _plcConfig.StationData.IP;
+            _systemConfig.PLCConfig.Port = _plcConfig.StationData.Port;
+            DataContent.SetConfig(_systemConfig);
             this.Close();
         }
 

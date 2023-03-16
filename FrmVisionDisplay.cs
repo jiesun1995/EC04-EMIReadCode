@@ -70,8 +70,8 @@ namespace EC04_EMIReadCode
                 //cogImage.ToBitmap
                 SystemHelper.UIShow(btnCamera, () =>
                 {
-                    btnCamera.BackColor = Color.Green;
-                    lblState.BackColor = Color.Green;
+                    btnCamera.BackColor = Color.GreenYellow;
+                    lblState.BackColor = Color.GreenYellow;
                 });
             }
             catch (Exception ex)
@@ -94,13 +94,14 @@ namespace EC04_EMIReadCode
                 
                 var leftResult = bool.Parse(_visionHelper.GetOutput("LeftResult"));
                 var rightResult = bool.Parse(_visionHelper.GetOutput("RightResult"));
-                var leftCode = leftResult? _visionHelper.GetOutput("LeftCode"):"NG";
-                var rightCode = rightResult? _visionHelper.GetOutput("RightCode"):"NG";
-
+                var leftCode = leftResult ? _visionHelper.GetOutput("LeftCode"):"NG";
+                var rightCode = rightResult ? _visionHelper.GetOutput("RightCode"):"NG";
+                
                 SystemHelper.UIShow(btnReadCode, () =>
                 {
-                    btnReadCode.BackColor = Color.Green;
+                    btnReadCode.BackColor = Color.GreenYellow;
                     _visionHelper.DisPaly(cogRecordDisplay1);
+                    //cogRecordDisplay1.c(Cognex.VisionPro.Display.CogDisplayContentBitmapConstants.Image)
                 });
                 return new Tuple<Tuple<bool, string>, Tuple<bool, string>>
                     (new Tuple<bool, string>(leftResult, leftCode), new Tuple<bool, string>(rightResult, rightCode));
@@ -121,11 +122,14 @@ namespace EC04_EMIReadCode
             var rightResult = data.Item2.Item1;
             var leftCode = data.Item1.Item2;
             var rightCode = data.Item2.Item2;
-            LogManager.Logs.Info($"读取到产品sn[{leftCode}:{rightCode}]");
+            if (leftResult && rightResult)
+                LogManager.Logs.Info($"读取到产品sn[{leftCode}:{rightCode}]");
+            else
+                LogManager.Logs.Error($"读取到产品sn[{leftCode}:{rightCode}]");
             SystemHelper.UIShow(lblResult, () =>
              {
                  lblResult.Text = $"结果：\r\n左：{leftCode}\r\n右：{rightCode}";
-                 lblResultColor.BackColor = leftResult && rightResult ? Color.Green : Color.Red;
+                 lblResultColor.BackColor = leftResult && rightResult ? Color.GreenYellow : Color.Red;
                  lblTime.Text = $"耗时：\r\n{_stopwatch.Elapsed.TotalMilliseconds}ms";
              });
         }

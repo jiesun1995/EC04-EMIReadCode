@@ -32,17 +32,19 @@
             this.gbxTitle = new System.Windows.Forms.GroupBox();
             this.btnLock = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.tbxSN = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.tbxRigthSN = new System.Windows.Forms.TextBox();
+            this.tbxLeftSN = new System.Windows.Forms.TextBox();
             this.lblSn = new System.Windows.Forms.Label();
             this.lblTime = new System.Windows.Forms.Label();
-            this.lblResult = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbxDoWork = new System.Windows.Forms.CheckBox();
             this.btnTest = new System.Windows.Forms.Button();
-            this.btnMesCode = new System.Windows.Forms.Button();
-            this.btnBurn = new System.Windows.Forms.Button();
+            this.btnLeft = new System.Windows.Forms.Button();
+            this.btnRigth = new System.Windows.Forms.Button();
             this.lblState = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.cbxDoWork = new System.Windows.Forms.CheckBox();
             this.gbxTitle.SuspendLayout();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -61,7 +63,7 @@
             this.gbxTitle.Margin = new System.Windows.Forms.Padding(2);
             this.gbxTitle.Name = "gbxTitle";
             this.gbxTitle.Padding = new System.Windows.Forms.Padding(2);
-            this.gbxTitle.Size = new System.Drawing.Size(390, 208);
+            this.gbxTitle.Size = new System.Drawing.Size(387, 153);
             this.gbxTitle.TabIndex = 0;
             this.gbxTitle.TabStop = false;
             this.gbxTitle.Text = "镭雕 ";
@@ -70,7 +72,7 @@
             // 
             this.btnLock.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLock.Font = new System.Drawing.Font("宋体", 9F);
-            this.btnLock.Location = new System.Drawing.Point(320, 0);
+            this.btnLock.Location = new System.Drawing.Point(317, 0);
             this.btnLock.Name = "btnLock";
             this.btnLock.Size = new System.Drawing.Size(39, 23);
             this.btnLock.TabIndex = 0;
@@ -80,24 +82,54 @@
             // 
             // panel1
             // 
-            this.panel1.Controls.Add(this.tbxSN);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.label1);
+            this.panel1.Controls.Add(this.tbxRigthSN);
+            this.panel1.Controls.Add(this.tbxLeftSN);
             this.panel1.Controls.Add(this.lblSn);
             this.panel1.Controls.Add(this.lblTime);
-            this.panel1.Controls.Add(this.lblResult);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Enabled = false;
             this.panel1.Location = new System.Drawing.Point(2, 21);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(266, 185);
+            this.panel1.Size = new System.Drawing.Size(285, 130);
             this.panel1.TabIndex = 4;
             // 
-            // tbxSN
+            // label2
             // 
-            this.tbxSN.Location = new System.Drawing.Point(12, 34);
-            this.tbxSN.Multiline = true;
-            this.tbxSN.Name = "tbxSN";
-            this.tbxSN.Size = new System.Drawing.Size(249, 62);
-            this.tbxSN.TabIndex = 3;
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("宋体", 8F);
+            this.label2.Location = new System.Drawing.Point(16, 74);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(22, 11);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "右:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("宋体", 8F);
+            this.label1.Location = new System.Drawing.Point(16, 42);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(22, 11);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "左:";
+            // 
+            // tbxRigthSN
+            // 
+            this.tbxRigthSN.Location = new System.Drawing.Point(45, 66);
+            this.tbxRigthSN.Name = "tbxRigthSN";
+            this.tbxRigthSN.Size = new System.Drawing.Size(216, 26);
+            this.tbxRigthSN.TabIndex = 4;
+            // 
+            // tbxLeftSN
+            // 
+            this.tbxLeftSN.Location = new System.Drawing.Point(45, 34);
+            this.tbxLeftSN.Name = "tbxLeftSN";
+            this.tbxLeftSN.Size = new System.Drawing.Size(216, 26);
+            this.tbxLeftSN.TabIndex = 3;
             // 
             // lblSn
             // 
@@ -121,77 +153,20 @@
             this.lblTime.TabIndex = 1;
             this.lblTime.Text = "耗时:";
             // 
-            // lblResult
-            // 
-            this.lblResult.AutoSize = true;
-            this.lblResult.Font = new System.Drawing.Font("宋体", 9F);
-            this.lblResult.Location = new System.Drawing.Point(10, 136);
-            this.lblResult.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblResult.Name = "lblResult";
-            this.lblResult.Size = new System.Drawing.Size(35, 12);
-            this.lblResult.TabIndex = 2;
-            this.lblResult.Text = "结果:";
-            // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.cbxDoWork);
             this.groupBox1.Controls.Add(this.btnTest);
-            this.groupBox1.Controls.Add(this.btnMesCode);
-            this.groupBox1.Controls.Add(this.btnBurn);
+            this.groupBox1.Controls.Add(this.btnLeft);
+            this.groupBox1.Controls.Add(this.btnRigth);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBox1.Enabled = false;
-            this.groupBox1.Location = new System.Drawing.Point(268, 21);
+            this.groupBox1.Location = new System.Drawing.Point(287, 21);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(120, 185);
+            this.groupBox1.Size = new System.Drawing.Size(98, 130);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "测试";
-            // 
-            // btnTest
-            // 
-            this.btnTest.Location = new System.Drawing.Point(6, 58);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(109, 23);
-            this.btnTest.TabIndex = 2;
-            this.btnTest.Text = "测试";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
-            // 
-            // btnMesCode
-            // 
-            this.btnMesCode.Font = new System.Drawing.Font("宋体", 9F);
-            this.btnMesCode.Location = new System.Drawing.Point(6, 87);
-            this.btnMesCode.Name = "btnMesCode";
-            this.btnMesCode.Size = new System.Drawing.Size(62, 23);
-            this.btnMesCode.TabIndex = 1;
-            this.btnMesCode.Text = "获取码";
-            this.btnMesCode.UseVisualStyleBackColor = true;
-            this.btnMesCode.Click += new System.EventHandler(this.btnMesCode_Click);
-            // 
-            // btnBurn
-            // 
-            this.btnBurn.Font = new System.Drawing.Font("宋体", 9F);
-            this.btnBurn.Location = new System.Drawing.Point(67, 87);
-            this.btnBurn.Name = "btnBurn";
-            this.btnBurn.Size = new System.Drawing.Size(48, 23);
-            this.btnBurn.TabIndex = 0;
-            this.btnBurn.Text = "镭雕";
-            this.btnBurn.UseVisualStyleBackColor = true;
-            this.btnBurn.Click += new System.EventHandler(this.btnBurn_Click);
-            // 
-            // lblState
-            // 
-            this.lblState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblState.BackColor = System.Drawing.Color.GreenYellow;
-            this.lblState.Location = new System.Drawing.Point(364, 0);
-            this.lblState.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblState.Name = "lblState";
-            this.lblState.Size = new System.Drawing.Size(26, 22);
-            this.lblState.TabIndex = 3;
-            // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // cbxDoWork
             // 
@@ -204,11 +179,57 @@
             this.cbxDoWork.UseVisualStyleBackColor = true;
             this.cbxDoWork.CheckedChanged += new System.EventHandler(this.cbxDoWork_CheckedChanged);
             // 
+            // btnTest
+            // 
+            this.btnTest.Location = new System.Drawing.Point(6, 58);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(85, 23);
+            this.btnTest.TabIndex = 2;
+            this.btnTest.Text = "测试";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
+            // btnLeft
+            // 
+            this.btnLeft.Enabled = false;
+            this.btnLeft.Font = new System.Drawing.Font("宋体", 9F);
+            this.btnLeft.Location = new System.Drawing.Point(6, 87);
+            this.btnLeft.Name = "btnLeft";
+            this.btnLeft.Size = new System.Drawing.Size(36, 23);
+            this.btnLeft.TabIndex = 1;
+            this.btnLeft.Text = "左";
+            this.btnLeft.UseVisualStyleBackColor = true;
+            // 
+            // btnRigth
+            // 
+            this.btnRigth.Enabled = false;
+            this.btnRigth.Font = new System.Drawing.Font("宋体", 9F);
+            this.btnRigth.Location = new System.Drawing.Point(55, 87);
+            this.btnRigth.Name = "btnRigth";
+            this.btnRigth.Size = new System.Drawing.Size(36, 23);
+            this.btnRigth.TabIndex = 0;
+            this.btnRigth.Text = "右";
+            this.btnRigth.UseVisualStyleBackColor = true;
+            // 
+            // lblState
+            // 
+            this.lblState.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblState.BackColor = System.Drawing.Color.GreenYellow;
+            this.lblState.Location = new System.Drawing.Point(361, 0);
+            this.lblState.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblState.Name = "lblState";
+            this.lblState.Size = new System.Drawing.Size(26, 22);
+            this.lblState.TabIndex = 3;
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // FrmRadiumCarving
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(390, 208);
+            this.ClientSize = new System.Drawing.Size(387, 153);
             this.Controls.Add(this.gbxTitle);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FrmRadiumCarving";
@@ -226,18 +247,20 @@
         #endregion
 
         private System.Windows.Forms.GroupBox gbxTitle;
-        private System.Windows.Forms.Label lblResult;
         private System.Windows.Forms.Label lblTime;
         private System.Windows.Forms.Label lblSn;
         private System.Windows.Forms.Label lblState;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox tbxSN;
+        private System.Windows.Forms.TextBox tbxLeftSN;
         private System.Windows.Forms.Button btnLock;
-        private System.Windows.Forms.Button btnMesCode;
-        private System.Windows.Forms.Button btnBurn;
+        private System.Windows.Forms.Button btnLeft;
+        private System.Windows.Forms.Button btnRigth;
         private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.CheckBox cbxDoWork;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox tbxRigthSN;
     }
 }

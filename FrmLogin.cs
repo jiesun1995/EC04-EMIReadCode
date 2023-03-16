@@ -78,7 +78,7 @@ namespace EC04_EMIReadCode
                         DataContent.SystemConfig.SystemPassWord = tbxNewPassword.Text;
                         DataContent.SetConfig(DataContent.SystemConfig);
                         lblUpdateTip.Text = "修改成功";
-                        lblUpdateTip.ForeColor = Color.Green;
+                        lblUpdateTip.ForeColor = Color.GreenYellow;
                     }
                 }
                 else
@@ -96,7 +96,7 @@ namespace EC04_EMIReadCode
                         DataContent.SystemConfig.PassWord = tbxNewPassword.Text;
                         DataContent.SetConfig(DataContent.SystemConfig);
                         lblUpdateTip.Text = "修改成功";
-                        lblUpdateTip.ForeColor = Color.Green;
+                        lblUpdateTip.ForeColor = Color.GreenYellow;
                     }
                 }
                 else
