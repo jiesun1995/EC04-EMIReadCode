@@ -1,5 +1,5 @@
 ﻿using Cognex.VisionPro.ToolBlock;
-using EC04_EMIReadCode.Comm;
+using P117_EMIReadCode.Comm;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EC04_EMIReadCode
+namespace P117_EMIReadCode
 {
     public partial class FrmVisionSetting : Form
     {
@@ -19,13 +19,13 @@ namespace EC04_EMIReadCode
         public FrmVisionSetting(Func<CogToolBlock,Task> leftcallback, Func<CogToolBlock,Task> rightcallback)
         {
             InitializeComponent();
-            _leftFrmVisionUpdate = new FrmVisionUpdate(DataContent.SystemConfig.LeftVppPath, DataContent.SystemConfig.LeftCamera,(vpppath,cameraConfig, toolblock) =>
+            _leftFrmVisionUpdate = new FrmVisionUpdate(DataContent.SystemConfig.LeftVppPath,"B", DataContent.SystemConfig.LeftCamera,(vpppath,cameraConfig, toolblock) =>
             {
                 DataContent.SystemConfig.LeftVppPath = vpppath;
                 DataContent.SystemConfig.LeftCamera = cameraConfig;
                 leftcallback(toolblock).Wait();
             });
-            _rightFrmVisionUpdate = new FrmVisionUpdate(DataContent.SystemConfig.RigthVppPath, DataContent.SystemConfig.RigthCamera, (vpppath, cameraConfig, toolblock) =>
+            _rightFrmVisionUpdate = new FrmVisionUpdate(DataContent.SystemConfig.RigthVppPath,"A", DataContent.SystemConfig.RigthCamera, (vpppath, cameraConfig, toolblock) =>
             {
                 DataContent.SystemConfig.RigthVppPath = vpppath;
                 DataContent.SystemConfig.RigthCamera = cameraConfig;

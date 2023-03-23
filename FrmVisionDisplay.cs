@@ -1,5 +1,5 @@
 ﻿using Cognex.VisionPro;
-using EC04_EMIReadCode.Comm;
+using P117_EMIReadCode.Comm;
 using MvCamCtrl.NET;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EC04_EMIReadCode
+namespace P117_EMIReadCode
 {
     public partial class FrmVisionDisplay : Form
     {
@@ -21,7 +21,8 @@ namespace EC04_EMIReadCode
         private readonly Stopwatch _stopwatch;
         private string _cameraName;
         private ICogImage _cogImage;
-        public FrmVisionDisplay(string vppPath,string cameraName,string title="相机")
+        private string _ligthCh;
+        public FrmVisionDisplay(string vppPath,string cameraName,string ligthCh,string title="相机")
         {
             _stopwatch=new Stopwatch();
             _cameraName = cameraName;
@@ -29,6 +30,7 @@ namespace EC04_EMIReadCode
             LoadVision(vppPath, cameraName).Wait();
             gbxTitle.Text = title;
             lblState.BackColor = _camera != null ? Color.GreenYellow : Color.Red;
+            _ligthCh = ligthCh;
         }
         private string BuildEmpty(int length)
         {
@@ -55,9 +57,10 @@ namespace EC04_EMIReadCode
             });
             return task;
         }
-        private ICogImage RunCamera(string exposureTime="", string gain = "")
+        private ICogImage RunCamera(string exposureTime = "", string gain = "")
         {
-            ICogImage cogImage=null;
+            ICogImage cogImage = null;
+            LigthControl.Instance(DataContent.SystemConfig.PortName, DataContent.SystemConfig.BaudRate).On(_ligthCh);
             try
             {
                 if (!string.IsNullOrWhiteSpace(exposureTime))

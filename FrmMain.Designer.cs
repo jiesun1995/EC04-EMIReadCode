@@ -1,4 +1,4 @@
-﻿namespace EC04_EMIReadCode
+﻿namespace P117_EMIReadCode
 {
     partial class FrmMain
     {
@@ -192,7 +192,7 @@
             this.btnLogin.Size = new System.Drawing.Size(133, 55);
             this.btnLogin.TabIndex = 3;
             this.btnLogin.Text = "权限登陆";
-            this.btnLogin.UseVisualStyleBackColor = true;
+            this.btnLogin.UseVisualStyleBackColor = false;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
             // button1
@@ -211,7 +211,7 @@
             // 
             // btnLogo
             // 
-            this.btnLogo.BackgroundImage = global::EC04_EMIReadCode.Properties.Resources.Luxshare;
+            this.btnLogo.BackgroundImage = global::P117_EMIReadCode.Properties.Resources.Luxshare;
             this.btnLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.btnLogo.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnLogo.Location = new System.Drawing.Point(0, 0);

@@ -1,4 +1,4 @@
-﻿using EC04_EMIReadCode.Comm;
+﻿using P117_EMIReadCode.Comm;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EC04_EMIReadCode
+namespace P117_EMIReadCode
 {
     /// <summary>
     /// 镭雕工站
@@ -22,12 +22,14 @@ namespace EC04_EMIReadCode
         //private readonly SocketClient _socketClient;
         private readonly SocketServer _socketServer;
         private readonly Stopwatch _stopwatch;
-        private string _code=string.Empty;
+        private string _code = string.Empty;
         private List<Socket> _socketClients;
         private byte[] buffer = new byte[1024 * 1024 * 2];
+        private readonly MesService _mesService;
 
-        public FrmRadiumCarving(string ip,int port,string title="烧录")
+        public FrmRadiumCarving(string ip, int port, MesService mesService, string title = "烧录")
         {
+            _mesService = mesService;
             _socketClients = new List<Socket>();
             InitializeComponent();
             _socketServer = new SocketServer(ip, port, client =>
@@ -61,7 +63,7 @@ namespace EC04_EMIReadCode
                             break;
                         }
                     }
-                },client,TaskCreationOptions.LongRunning);
+                }, client, TaskCreationOptions.LongRunning);
             });
             _socketServer.StartListen();
             _stopwatch = new Stopwatch();
@@ -77,52 +79,39 @@ namespace EC04_EMIReadCode
             }
             return sb.ToString();
         }
-        private bool CodeParse(string sn)
+        private string CodeParse(string sn)
         {
             if (!string.IsNullOrWhiteSpace(sn) && sn != "NG")
             {
-                if (sn.Length != DataContent.SystemConfig.CodeLength)
+                if (DataContent.RadiumCarving)
                 {
-                    LogManager.RadiumCarvingLogs.Warn("长度不符！");
-                    return false;
+                    if (DataContent.RadiumCarvingSN)
+                        return sn;
                 }
                 else
                 {
-                    return true;
+                    if (sn.Length != DataContent.SystemConfig.CodeLength)
+                    {
+                        LogManager.RadiumCarvingLogs.Warn("长度不符！");
+                    }
+                    else
+                    {
+                        if (_mesService.QueryStation(sn))
+                        {
+                            if (_mesService.PassStation(sn))
+                                return sn;
+                        }
+                    }
                 }
             }
             else
             {
                 LogManager.RadiumCarvingLogs.Warn($"SN:{sn}为空或者ng！");
-                return false;
             }
-        }
-        private string QueryCode(string leftSN, string rightSN)
-        {
-            try
-            {
-                var leftcode = CodeParse(leftSN) ? leftSN : BuildEmpty(DataContent.SystemConfig.CodeLength);
-                var rightcode = CodeParse(rightSN) ? rightSN : BuildEmpty(DataContent.SystemConfig.CodeLength);
-                if (leftcode.Length != DataContent.SystemConfig.CodeLength)
-                {
-                    LogManager.RadiumCarvingLogs.Warn("左边镭雕长度不符！");
-                    return string.Empty;
-                }
-                if (rightcode.Length != DataContent.SystemConfig.CodeLength)
-                {
-                    LogManager.RadiumCarvingLogs.Warn("右边镭雕长度不符！");
-                }
-                return $"{leftcode}{rightcode}";
-            }
-            catch (Exception ex)
-            {
-                LogManager.RadiumCarvingLogs.Error(ex);
-            }
-            return string.Empty;
+            return BuildEmpty(DataContent.SystemConfig.CodeLength);
         }
         private void SendClientMsg(string msg)
         {
-            
             for (int i = _socketClients.Count - 1; i <= 0; i++)
             {
                 var client = _socketClients[i];
@@ -165,26 +154,34 @@ namespace EC04_EMIReadCode
             var result = data;
             return result;
         }
-        private void ShowUI(bool leftResult,bool rigthResult,string leftSN,string rigthSN)
+        private void ShowUI(bool leftResult, bool rigthResult, bool leftMesResult, bool rigthMesResult, string leftSN, string rigthSN)
         {
             SystemHelper.UIShow(btnRigth, () =>
             {
                 btnLeft.BackColor = leftResult ? Color.YellowGreen : Color.Red;
                 btnRigth.BackColor = rigthResult ? Color.YellowGreen : Color.Red;
+                btnLeftMes.BackColor = leftMesResult ? Color.YellowGreen : Color.Red;
+                btnRigthMes.BackColor = rigthMesResult ? Color.YellowGreen : Color.Red;
                 tbxLeftSN.Text = leftSN;
                 tbxRigthSN.Text = rigthSN;
                 lblTime.Text = $"烧录耗时:{_stopwatch.Elapsed.TotalMilliseconds}ms";
             });
         }
-        public bool SendMsg(string leftSN,string rightSN)
+        public Tuple<bool, bool> SendMsg(string leftSN, string rigthSN)
         {
             _stopwatch.Restart();
-            var code = QueryCode(leftSN,rightSN);
-            var result = Receive(code);
+            var leftCode = CodeParse(leftSN);
+            var rigthCode = CodeParse(rigthSN);
+            var leftMesResult = leftCode == leftSN;
+            var rigthMesResult = rigthCode == rigthSN;
+            var result = Receive($"{leftCode}{rigthCode}");
             _stopwatch.Stop();
-            ShowUI(result,result,leftSN,rightSN);
-            return result;
+            ShowUI(result, result, leftMesResult, rigthMesResult, leftSN, rigthSN);
+            return new Tuple<bool, bool>(leftMesResult, rigthMesResult);
         }
+
+        public string LeftSN { get { return SystemHelper.GetUIVal(tbxLeftSN, () => { return tbxLeftSN.Text; }); } }
+        public string RigthSN { get { return SystemHelper.GetUIVal(tbxRigthSN, () => { return tbxRigthSN.Text; }); } }
 
         private void BurnForm_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -193,7 +190,7 @@ namespace EC04_EMIReadCode
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lblState.BackColor = _socketServer != null && _socketClients.Count>0 ? Color.GreenYellow: Color.Red;
+            lblState.BackColor = _socketServer != null && _socketClients.Count > 0 ? Color.GreenYellow : Color.Red;
         }
 
         private void btnLock_Click(object sender, EventArgs e)
@@ -214,16 +211,35 @@ namespace EC04_EMIReadCode
         {
             string leftSN = tbxLeftSN.Text;
             string rightSN = tbxRigthSN.Text;
-            _stopwatch.Restart();
-            var code = QueryCode(leftSN,rightSN);
-            var result = Receive(code);
-            _stopwatch.Stop();
-            ShowUI(result,result,leftSN,rightSN);
+            SendMsg(leftSN, rightSN);
         }
 
         private void cbxDoWork_CheckedChanged(object sender, EventArgs e)
         {
             DataContent.RadiumCarving = cbxDoWork.Checked;
+        }
+
+        private void btnLeftMes_Click(object sender, EventArgs e)
+        {
+            //_mesService.GetCurrStation(tbxLeftSN.Text);
+            //_mesService.QueryStation(tbxLeftSN.Text);
+            if (_mesService.QueryStation(tbxLeftSN.Text))
+            {
+                _mesService.PassStation(tbxLeftSN.Text);
+            }
+        }
+
+        private void btnRigthMes_Click(object sender, EventArgs e)
+        {
+            if (_mesService.QueryStation(tbxRigthSN.Text))
+            {
+                _mesService.PassStation(tbxRigthSN.Text);
+            }
+        }
+
+        private void cbxSN_CheckedChanged(object sender, EventArgs e)
+        {
+            DataContent.RadiumCarvingSN = cbxSN.Checked;
         }
     }
 }

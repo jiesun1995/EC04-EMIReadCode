@@ -8,7 +8,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC04_EMIReadCode.Comm
+namespace P117_EMIReadCode.Comm
 {
     public class PLCHelper
     {
@@ -76,13 +76,13 @@ namespace EC04_EMIReadCode.Comm
         /// 读码失败
         /// </summary>
         NG = 3,
-        ///// <summary>
-        ///// 执行成功
-        ///// </summary>
-        //ResultOK = 4,
-        ///// <summary>
-        ///// 执行失败
-        ///// </summary>
-        //ResultNG = 5,
+        /// <summary>
+        /// 执行成功
+        /// </summary>
+        nodata = 5,
+        /// <summary>
+        /// 执行失败
+        /// </summary>
+        data = 0,
     }
 }

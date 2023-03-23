@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC04_EMIReadCode.Comm
+namespace P117_EMIReadCode.Comm
 {
     public static class HttpHelper
     {

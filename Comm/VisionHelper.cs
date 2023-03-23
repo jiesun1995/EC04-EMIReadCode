@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EC04_EMIReadCode.Comm
+namespace P117_EMIReadCode.Comm
 {
     public class VisionHelper
     {

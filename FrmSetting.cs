@@ -1,4 +1,4 @@
-﻿using EC04_EMIReadCode.Comm;
+﻿using P117_EMIReadCode.Comm;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EC04_EMIReadCode
+namespace P117_EMIReadCode
 {
     public partial class FrmSetting : Form
     {
@@ -33,6 +33,9 @@ namespace EC04_EMIReadCode
             tbxrigthCode.DataBindings.Add(new Binding("Text", _systemConfig, "RigthClientName"));
             nunCodeLength.DataBindings.Add(new Binding("Value", _systemConfig, "CodeLength"));
             tbxTimeOut.DataBindings.Add(new Binding("Text", _systemConfig, "SocketTimeout"));
+            tbxUrl.DataBindings.Add(new Binding("Text", _systemConfig, "MesUrl"));
+            tbxStationName.DataBindings.Add(new Binding("Text", _systemConfig, "StationName"));
+            tbxStationID.DataBindings.Add(new Binding("Text", _systemConfig, "StationId"));
         }
         private TableLayoutPanel LoadFrm(TableLayoutPanel tableLayout, Form form, int col, int row)
         {

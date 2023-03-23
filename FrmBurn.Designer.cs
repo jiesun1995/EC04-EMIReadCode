@@ -1,4 +1,4 @@
-﻿namespace EC04_EMIReadCode
+﻿namespace P117_EMIReadCode
 {
     partial class BurnForm
     {
@@ -79,7 +79,7 @@
             this.lblLeftState.Name = "lblLeftState";
             this.lblLeftState.Size = new System.Drawing.Size(26, 22);
             this.lblLeftState.TabIndex = 6;
-            this.lblLeftState.Text = "L";
+            this.lblLeftState.Text = "左";
             this.lblLeftState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnLock
@@ -232,7 +232,7 @@
             this.lblRigthState.Name = "lblRigthState";
             this.lblRigthState.Size = new System.Drawing.Size(26, 22);
             this.lblRigthState.TabIndex = 3;
-            this.lblRigthState.Text = "R";
+            this.lblRigthState.Text = "右";
             this.lblRigthState.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // timer1

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 
-namespace EC04_EMIReadCode.Comm
+namespace P117_EMIReadCode.Comm
 {
     public static class DataContent
     {
@@ -16,7 +16,14 @@ namespace EC04_EMIReadCode.Comm
         public static CacheData CacheData { private set; get; } = new CacheData();
 
         public static string User { set; get; }
+        /// <summary>
+        /// 屏蔽镭雕工站
+        /// </summary>
         public static bool RadiumCarving { get; set; }
+        /// <summary>
+        /// 固定镭雕SN
+        /// </summary>
+        public static bool RadiumCarvingSN { get; set; }
         public static bool Burn { get; set; }
        
 
@@ -52,6 +59,27 @@ namespace EC04_EMIReadCode.Comm
     }
     public class SystemConfig
     {
+        /// <summary>
+        /// 光源控制串口
+        /// </summary>
+        public string PortName { get; set; } = "COM1";
+        /// <summary>
+        /// 光源控制串口波特率
+        /// </summary>
+        public int BaudRate { get; set; } = 115200;
+
+        /// <summary>
+        /// mes地址
+        /// </summary>
+        public string MesUrl { get; set; } = "http://192.168.16.30/Bobcat/sfc_response.aspx";
+        /// <summary>
+        /// Mes站点名称
+        /// </summary>
+        public string StationName { get; set; } = "EMI打标";
+        /// <summary>
+        /// mes站点ID
+        /// </summary>
+        public string StationId { get; set; } = "A06-3FT-01_2_EMI打标";
         public string SystemPassWord { get; set; } = "jajqr168";
         public string PassWord { get; set; } = "888888";
         public int CodeLength { get; set; } = 17;
@@ -92,7 +120,7 @@ namespace EC04_EMIReadCode.Comm
         private Queue<string> BurnCodes { set; get; } = new Queue<string>();
         public void AddBurnCode(string key)
         {
-            if (BurnCodes.Count > 4)
+            if (BurnCodes.Count >= 4)
             {
                 BurnCodes.Dequeue();
             }

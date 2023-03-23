@@ -1,4 +1,4 @@
-﻿using EC04_EMIReadCode.Comm;
+﻿using P117_EMIReadCode.Comm;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,13 +6,14 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EC04_EMIReadCode
+namespace P117_EMIReadCode
 {
     /// <summary>
     /// 烧录工站
@@ -32,7 +33,10 @@ namespace EC04_EMIReadCode
             {
                 client.ReceiveTimeout = DataContent.SystemConfig.SocketTimeout;
                 var length = client.Receive(buffer);
-                var data = Encoding.UTF8.GetString(buffer, 0, length);
+                //var data = Encoding.UTF8.GetString(buffer, 0, length);
+                var data = ((IPEndPoint)client.RemoteEndPoint).Address.ToString();
+                if (_socketClients.ContainsKey(data))
+                    _socketClients.Remove(data);
                 _socketClients.Add(data,client);
             });
             _socketServer.StartListen();
@@ -89,7 +93,7 @@ namespace EC04_EMIReadCode
                         client.Shutdown(SocketShutdown.Both);
                         client.Close();
                     }
-                    result = true;
+                    result = data.ToUpper()=="OK";
                 }
                 catch(SocketException ex)
                 {
@@ -125,7 +129,7 @@ namespace EC04_EMIReadCode
                 lblTime.Text = $"烧录耗时:{_stopwatch.Elapsed.TotalMilliseconds}ms";
             });
         }
-        public bool SendMsg(string leftSN,string rigthSN)
+        public Tuple<bool,bool> SendMsg(string leftSN,string rigthSN)
         {
             _stopwatch.Restart();
             var leftTask = new TaskFactory().StartNew<bool>(obj =>
@@ -152,7 +156,7 @@ namespace EC04_EMIReadCode
             _stopwatch.Stop();
             var burnResult = leftTask.Result && rigthTask.Result ? true : false;
             ShowUI(leftTask.Result,rigthTask.Result,leftSN,rigthSN);
-            return burnResult;
+            return new Tuple<bool, bool>(leftTask.Result,rigthTask.Result);
         }
 
         private void BurnForm_FormClosed(object sender, FormClosedEventArgs e)

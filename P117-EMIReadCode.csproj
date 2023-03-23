@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{8ECBD55A-7836-4696-9C63-FE6D65693E9D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>EC04_EMIReadCode</RootNamespace>
-    <AssemblyName>EC04-EMIReadCode</AssemblyName>
+    <RootNamespace>P117_EMIReadCode</RootNamespace>
+    <AssemblyName>P117-EMIReadCode</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -83,6 +83,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Comm\LigthControl.cs" />
     <Compile Include="FrmBurn.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -147,6 +148,7 @@
     <Compile Include="FrmVisionUpdate.Designer.cs">
       <DependentUpon>FrmVisionUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Comm\MesService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

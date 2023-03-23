@@ -1,11 +1,11 @@
-﻿using EC04_EMIReadCode.Comm;
+﻿using P117_EMIReadCode.Comm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EC04_EMIReadCode
+namespace P117_EMIReadCode
 {
     internal static class Program
     {

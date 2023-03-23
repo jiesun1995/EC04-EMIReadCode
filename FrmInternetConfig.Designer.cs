@@ -1,4 +1,4 @@
-﻿namespace EC04_EMIReadCode
+﻿namespace P117_EMIReadCode
 {
     partial class FrmInternetConfig
     {

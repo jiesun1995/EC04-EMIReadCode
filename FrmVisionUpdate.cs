@@ -1,6 +1,6 @@
 ﻿using Cognex.VisionPro.ToolBlock;
 using Cognex.VisionPro;
-using EC04_EMIReadCode.Comm;
+using P117_EMIReadCode.Comm;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,16 +12,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EC04_EMIReadCode
+namespace P117_EMIReadCode
 {
     public partial class FrmVisionUpdate : Form
     {
         private string _vppPath;
         private CameraConfig _cameraConfig;
         private readonly Action<string,CameraConfig, CogToolBlock> _callBack;
-        public FrmVisionUpdate(string vppPath,CameraConfig cameraConfig,Action<string,CameraConfig, CogToolBlock> CallBack)
+        private readonly string _ligthCh;
+        public FrmVisionUpdate(string vppPath,string ligthCh,CameraConfig cameraConfig,Action<string,CameraConfig, CogToolBlock> CallBack)
         {
-            _callBack=CallBack;
+            _ligthCh = ligthCh;
+            _callBack =CallBack;
             _vppPath = vppPath;
             _cameraConfig = cameraConfig;
             InitializeComponent();
@@ -85,6 +87,7 @@ namespace EC04_EMIReadCode
             ICogImage cogImage = null;
             try
             {
+                LigthControl.Instance(DataContent.SystemConfig.PortName, DataContent.SystemConfig.BaudRate).On(_ligthCh);
                 var camera = CameraHelper.Instance.Open(tbxName.Text);
                 CameraHelper.Instance.SetExposureTime(camera, nunExposureTime.Value.ToString());
                 CameraHelper.Instance.SetGain(camera, nunGain.Value.ToString());

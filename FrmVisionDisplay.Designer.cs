@@ -1,4 +1,4 @@
-﻿namespace EC04_EMIReadCode
+﻿namespace P117_EMIReadCode
 {
     partial class FrmVisionDisplay
     {
@@ -134,11 +134,11 @@
             // lblResult
             // 
             this.lblResult.AutoSize = true;
-            this.lblResult.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblResult.Font = new System.Drawing.Font("宋体", 7F);
             this.lblResult.Location = new System.Drawing.Point(-2, 103);
             this.lblResult.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblResult.Name = "lblResult";
-            this.lblResult.Size = new System.Drawing.Size(41, 12);
+            this.lblResult.Size = new System.Drawing.Size(35, 10);
             this.lblResult.TabIndex = 1;
             this.lblResult.Text = "结果：";
             // 

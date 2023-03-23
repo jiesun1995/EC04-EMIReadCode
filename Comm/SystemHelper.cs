@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace EC04_EMIReadCode.Comm
+namespace P117_EMIReadCode.Comm
 {
     public class SystemHelper
     {
@@ -40,6 +40,22 @@ namespace EC04_EMIReadCode.Comm
             else
             {
                 act();
+            }
+        }
+        public static T GetUIVal<T>(Control control, Func<T> func) where T:class
+        {
+            if (control.IsHandleCreated)
+            {
+                T obj = null;
+                control.Invoke(new Action(()=>
+                {
+                    obj = func();
+                }));
+                return obj;
+            }
+            else
+            {
+                return func();
             }
         }
     }
