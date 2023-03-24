@@ -90,6 +90,58 @@ namespace P117_EMIReadCode.Comm
                 return;
             var task = Task.Factory.StartNew(() =>
             {
+                if (_queue.Count <= 0)
+                    return;
+                Tuple<string, Color> val = null;
+                if (_queue.TryDequeue(out val))
+                {
+                    _listView.Invoke((EventHandler)delegate
+                    {
+                        _listView.BeginUpdate();
+                        ListViewItem listViewItem = new ListViewItem();
+                        listViewItem.SubItems.Add(DateTime.Now.ToString("HH:mm:ss"));
+                        listViewItem.SubItems.Add(val.Item1);
+                        listViewItem.BackColor = val.Item2;
+                        _listView.Items.Add(listViewItem);
+
+                        if (_listView.Items.Count >= 100)
+                        {
+                            _listView.Items.RemoveAt(0);
+                            _listView.Items[_listView.Items.Count - 1].EnsureVisible();
+                        }
+                        _listView.EnsureVisible(_listView.Items.Count - 1);
+                        _listView.EndUpdate();
+                    });
+                }
+            });
+        }
+    }
+
+    public class MyLog
+    {
+        private readonly log4net.ILog _log;
+        private readonly log4net.ILog _baselog;
+        private readonly Action<string,Color> _action;
+        /// <summary>
+        /// 初始化函数
+        /// </summary>
+        /// <param name="log">当前log4net对象</param>
+        /// <param name="action">写入日志后的展示函数</param>
+        /// <param name="baselog">全局日志对象</param>
+        public MyLog(ILog log, Action<string, Color> action,ILog baselog=null)
+        {
+            _log = log;
+            _action = action;
+            _baselog = baselog;
+        }
+
+        private static void UIShow(string message, Color color)
+        {
+            _queue.Enqueue(new Tuple<string, Color>(message, color));
+            if (_listView == null)
+                return;
+            var task = Task.Factory.StartNew(() =>
+            {
                 if (_queue.Count <= 0 )
                     return;
                 Tuple<string, Color> val = null;
