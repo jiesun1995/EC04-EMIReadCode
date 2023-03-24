@@ -24,6 +24,9 @@ namespace P117_EMIReadCode.Comm
         /// 固定镭雕SN
         /// </summary>
         public static bool RadiumCarvingSN { get; set; }
+        /// <summary>
+        /// 屏蔽烧录工站
+        /// </summary>
         public static bool Burn { get; set; }
        
 

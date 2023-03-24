@@ -36,6 +36,8 @@ namespace P117_EMIReadCode
             tbxUrl.DataBindings.Add(new Binding("Text", _systemConfig, "MesUrl"));
             tbxStationName.DataBindings.Add(new Binding("Text", _systemConfig, "StationName"));
             tbxStationID.DataBindings.Add(new Binding("Text", _systemConfig, "StationId"));
+            tbxCom.DataBindings.Add(new Binding("Text", _systemConfig, "PortName"));
+            tbxBaudRate.DataBindings.Add(new Binding("Text", _systemConfig, "BaudRate"));
         }
         private TableLayoutPanel LoadFrm(TableLayoutPanel tableLayout, Form form, int col, int row)
         {

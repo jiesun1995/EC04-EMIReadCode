@@ -49,6 +49,10 @@
             this.label5 = new System.Windows.Forms.Label();
             this.tbxStationName = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.tbxCom = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbxBaudRate = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
             this.GroupBox1.SuspendLayout();
@@ -112,6 +116,10 @@
             // 
             // GroupBox1
             // 
+            this.GroupBox1.Controls.Add(this.tbxBaudRate);
+            this.GroupBox1.Controls.Add(this.label9);
+            this.GroupBox1.Controls.Add(this.tbxCom);
+            this.GroupBox1.Controls.Add(this.label8);
             this.GroupBox1.Controls.Add(this.tbxTimeOut);
             this.GroupBox1.Controls.Add(this.label4);
             this.GroupBox1.Controls.Add(this.tbxrigthCode);
@@ -138,11 +146,11 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 102);
+            this.label4.Location = new System.Drawing.Point(-2, 102);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(143, 12);
+            this.label4.Size = new System.Drawing.Size(149, 12);
             this.label4.TabIndex = 6;
-            this.label4.Text = "烧录程序等待时间（ms）:";
+            this.label4.Text = "烧录程序等待时间（ms）：";
             // 
             // tbxrigthCode
             // 
@@ -154,7 +162,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(48, 75);
+            this.label3.Location = new System.Drawing.Point(46, 75);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(101, 12);
             this.label3.TabIndex = 4;
@@ -170,7 +178,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(48, 47);
+            this.label2.Location = new System.Drawing.Point(46, 47);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(101, 12);
             this.label2.TabIndex = 2;
@@ -191,7 +199,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(60, 19);
+            this.label1.Location = new System.Drawing.Point(58, 19);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(89, 12);
             this.label1.TabIndex = 0;
@@ -261,6 +269,38 @@
             this.label6.TabIndex = 10;
             this.label6.Text = "Mes地址:";
             // 
+            // tbxCom
+            // 
+            this.tbxCom.Location = new System.Drawing.Point(173, 125);
+            this.tbxCom.Name = "tbxCom";
+            this.tbxCom.Size = new System.Drawing.Size(120, 21);
+            this.tbxCom.TabIndex = 9;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(70, 128);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(77, 12);
+            this.label8.TabIndex = 8;
+            this.label8.Text = "光源串口号：";
+            // 
+            // tbxBaudRate
+            // 
+            this.tbxBaudRate.Location = new System.Drawing.Point(173, 151);
+            this.tbxBaudRate.Name = "tbxBaudRate";
+            this.tbxBaudRate.Size = new System.Drawing.Size(120, 21);
+            this.tbxBaudRate.TabIndex = 11;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(70, 154);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(77, 12);
+            this.label9.TabIndex = 10;
+            this.label9.Text = "光源波特率：";
+            // 
             // FrmSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -304,5 +344,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.TextBox tbxBaudRate;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox tbxCom;
+        private System.Windows.Forms.Label label8;
     }
 }
